@@ -117,6 +117,25 @@ public class Datasource {
             return null;
         }
     }
+    public List<Sale> querySaleForEmployeeId(int id) {
+        try {
+            querySalesByEmployeeId.setInt(1, id);
+            ResultSet results = querySalesByEmployeeId.executeQuery();
+
+            List<Sale> sales = new ArrayList<>();
+            while(results.next()) {
+                Sale sale = new Sale();
+                sale.setDescription(results.getString(INDEX_SALES_DESCRIPTION));
+                sale.setDetails(results.getString(INDEX_SALES_DETAILS));
+                sale.setEmployeeId(results.getInt(INDEX_SALESEMP_ID));
+                sale.setDate(results.getString(INDEX_SALES_DATE));
+            }
+            return sales;
+        } catch (SQLException e) {
+            System.out.println("Query failed" + e.getMessage());
+            return null;
+        }
+    }
 }
 
 
