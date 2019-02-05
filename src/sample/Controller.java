@@ -8,6 +8,7 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableView;
 import sample.model.Datasource;
 import sample.model.Employee;
+import sample.model.Sale;
 
 /**
  * Author: Asen Koparanski
@@ -19,6 +20,9 @@ public class Controller {
     @FXML
     private TableView<Employee> employeeTable;
 
+    @FXML
+    private TableView<Sale> salesTable;
+
     public void listEmployees() {
 
         Task<ObservableList<Employee>> task = new GetAllEmployeesTask();
@@ -28,6 +32,24 @@ public class Controller {
 
     }
 
+    @FXML
+    public void listSalesForEmployees() {
+        final Employee emp = (Employee) employeeTable.getSelectionModel().getSelectedItem();
+        if (emp == null) {
+            System.out.println("No employee selected");
+            return;
+        }
+        Task<ObservableList<Sale>> task = new Task<ObservableList<Sale>>() {
+            @Override
+            protected ObservableList<Sale> call() throws Exception {
+
+
+                return FXCollections.observableArrayList(
+                        Datasource.getInstance().querySaleForEmployeeId(emp.getId()));
+            }
+        };
+        employeeTable.itemsProperty().bind(task.valueProperty());
+    }
 //    @FXML
 //    public void handleClickListView() {
 //        TodoItem item = todoListView.getSelectionModel().getSelectedItem();
