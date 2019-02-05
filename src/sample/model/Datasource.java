@@ -43,6 +43,8 @@ public class Datasource {
             " WHERE " + COLUMN_EMP_ID + "  = ? ORDER BY " + COLUMN_EMP_NAME + " COLLATE NOCASE";
     private Connection conn;
 
+    private PreparedStatement querySalesByEmployeeId;
+
     private static Datasource instance = new Datasource();
 
     private Datasource() {
@@ -56,6 +58,7 @@ public class Datasource {
     public boolean open() {
         try {
             conn = DriverManager.getConnection(CONNECTION_STRING);
+            querySalesByEmployeeId = conn.prepareStatement(QUERY_SALES_BY_EMPLOYEE_ID);
             return true;
         } catch (SQLException e) {
             System.out.println("Couldn't connect to database: " + e.getMessage());
@@ -67,6 +70,9 @@ public class Datasource {
         try {
             if (conn != null) {
                 conn.close();
+            }
+            if (querySalesByEmployeeId != null) {
+                querySalesByEmployeeId.close();
             }
         } catch (SQLException e) {
             System.out.println("Couldn't close connection: " + e.getMessage());
