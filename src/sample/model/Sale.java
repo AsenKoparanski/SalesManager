@@ -11,6 +11,15 @@ public class Sale {
     private String description;
     private String details;
     private int employeeId;
+    private String date;
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 
     public String getDescription() {
         return description;
