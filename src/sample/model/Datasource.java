@@ -39,7 +39,8 @@ public class Datasource {
 
     public static final String QUERY_EMPLOYEES = "SELECT " + COLUMN_EMP_NAME + " FROM " +
             TABLE_EMPLOYEES + " WHERE " + COLUMN_EMP_NAME + " = ?";
-
+    public static final String QUERY_SALES_BY_EMPLOYEE_ID = "SELECT * FROM " + TABLE_EMPLOYEES +
+            " WHERE " + COLUMN_EMP_ID + "  = ? ORDER BY " + COLUMN_EMP_NAME + " COLLATE NOCASE";
     private Connection conn;
 
     private static Datasource instance = new Datasource();
