@@ -1,6 +1,7 @@
 package sample.model;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,9 +26,12 @@ public class Datasource {
     public static final String COLUMN_SALES_DESCRIPTION = "description";
     public static final String COLUMN_SALES_DETAILS = "details";
     public static final String COLUMN_SALESEMP_ID = "employeeId";
-    public static final int INDEX_RECORD_NAME = 1;
-    public static final int INDEX_RECORD_LEVEL = 2;
-    public static final int INDEX_RECORDEMP_ID = 3;
+    public static final String COLUMN_SALES_DATE = "date";
+    public static final int INDEX_SALES_DESCRIPTION = 1;
+    public static final int INDEX_SALES_DETAILS = 2;
+    public static final int INDEX_SALESEMP_ID = 3;
+    public static final int INDEX_SALES_DATE = 4;
+
 
     public static final int ORDER_BY_NONE = 1;
     public static final int ORDER_BY_ASC = 2;
