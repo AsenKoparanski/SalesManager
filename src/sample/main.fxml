@@ -60,7 +60,7 @@
         <VBox style="-fx-background-color: white">
             <TextArea fx:id="itemDetailsTextArea" VBox.vgrow="ALWAYS" />
             <HBox>
-                <Label style="-fx-background-color: white" text="Date achieved: ">
+                <Label style="-fx-background-color: white" visible="false" text="Date achieved: ">
                     <font>
                         <Font name="Times New Roman bold" size="20" />
                     </font>
