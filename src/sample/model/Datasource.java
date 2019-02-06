@@ -32,7 +32,6 @@ public class Datasource {
     public static final int INDEX_SALESEMP_ID = 3;
     public static final int INDEX_SALES_DATE = 4;
 
-
     public static final int ORDER_BY_NONE = 1;
     public static final int ORDER_BY_ASC = 2;
     public static final int ORDER_BY_DESC = 3;
@@ -43,10 +42,20 @@ public class Datasource {
     public static final String QUERY_SALES_BY_EMPLOYEE_ID = "SELECT * FROM " + TABLE_EMPLOYEES +
             " WHERE " + COLUMN_EMP_ID + "  = ? ORDER BY " + COLUMN_EMP_NAME + " COLLATE NOCASE";
 
-    public static final String UPDATE_EMPLOYEE_NAME =
+    public static final String INSERT_EMPLOYEES = "INSERT INTO " + TABLE_EMPLOYEES +
+            '(' + COLUMN_EMP_ID + ", " + COLUMN_EMP_NAME + ") VALUES(?, ?)";
+
+    public static final String INSERT_SALES = "INSERT INTO " + TABLE_SALES +
+            '(' + COLUMN_SALES_DESCRIPTION + ", " + COLUMN_SALES_DETAILS + ", " +
+            COLUMN_SALESEMP_ID + ", " + COLUMN_SALES_DATE + ") VALUES(?, ?, ?, ?)";
+
+
+    //    public static final String UPDATE_EMPLOYEE_NAME =
     private Connection conn;
 
     private PreparedStatement querySalesByEmployeeId;
+    private PreparedStatement insertIntoEmployees;
+    private PreparedStatement insertIntoSales;
 
     private static Datasource instance = new Datasource();
 
@@ -62,6 +71,10 @@ public class Datasource {
         try {
             conn = DriverManager.getConnection(CONNECTION_STRING);
             querySalesByEmployeeId = conn.prepareStatement(QUERY_SALES_BY_EMPLOYEE_ID);
+            // We use the returned ID's to pass onto the sales method.
+            insertIntoEmployees = conn.prepareStatement(INSERT_EMPLOYEES, Statement.RETURN_GENERATED_KEYS);
+            insertIntoSales = conn.prepareStatement(INSERT_SALES);
+
             return true;
         } catch (SQLException e) {
             System.out.println("Couldn't connect to database: " + e.getMessage());
@@ -76,6 +89,12 @@ public class Datasource {
             }
             if (querySalesByEmployeeId != null) {
                 querySalesByEmployeeId.close();
+            }
+            if (insertIntoEmployees != null) {
+                insertIntoEmployees.close();
+            }
+            if (insertIntoSales != null) {
+                insertIntoSales.close();
             }
         } catch (SQLException e) {
             System.out.println("Couldn't close connection: " + e.getMessage());
