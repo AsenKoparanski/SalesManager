@@ -8,6 +8,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import sample.model.Datasource;
 
+import java.sql.SQLException;
+
 /**
  * Author: Asen Koparanski
  * Purpose:
@@ -34,6 +36,11 @@ public class Main extends Application {
         if(!Datasource.getInstance().open()) {
             System.out.println("FATAL ERROR: Couldn't connect to database");
             Platform.exit();
+        }
+        try {
+            Datasource.getInstance().insertEmployee(138,"Halil");
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
         }
     }
 
