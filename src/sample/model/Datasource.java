@@ -36,8 +36,8 @@ public class Datasource {
     public static final int ORDER_BY_ASC = 2;
     public static final int ORDER_BY_DESC = 3;
 
-    public static final String QUERY_EMPLOYEES = "SELECT " + COLUMN_EMP_NAME + " FROM " +
-            TABLE_EMPLOYEES + " WHERE " + COLUMN_EMP_NAME + " = ?";
+    public static final String QUERY_EMPLOYEES = "SELECT " + COLUMN_EMP_ID + " FROM " +
+            TABLE_EMPLOYEES + " WHERE " + COLUMN_EMP_ID + " = ?";
 
     public static final String QUERY_SALES_BY_EMPLOYEE_ID = "SELECT * FROM " + TABLE_EMPLOYEES +
             " WHERE " + COLUMN_EMP_ID + "  = ? ORDER BY " + COLUMN_EMP_NAME + " COLLATE NOCASE";
@@ -49,13 +49,12 @@ public class Datasource {
             '(' + COLUMN_SALES_DESCRIPTION + ", " + COLUMN_SALES_DETAILS + ", " +
             COLUMN_SALESEMP_ID + ", " + COLUMN_SALES_DATE + ") VALUES(?, ?, ?, ?)";
 
-
-    //    public static final String UPDATE_EMPLOYEE_NAME =
     private Connection conn;
 
     private PreparedStatement querySalesByEmployeeId;
     private PreparedStatement insertIntoEmployees;
     private PreparedStatement insertIntoSales;
+    private PreparedStatement queryEmployees;
 
     private static Datasource instance = new Datasource();
 
@@ -71,8 +70,8 @@ public class Datasource {
         try {
             conn = DriverManager.getConnection(CONNECTION_STRING);
             querySalesByEmployeeId = conn.prepareStatement(QUERY_SALES_BY_EMPLOYEE_ID);
-            // We use the returned ID's to pass onto the sales method.
-            insertIntoEmployees = conn.prepareStatement(INSERT_EMPLOYEES, Statement.RETURN_GENERATED_KEYS);
+            insertIntoEmployees = conn.prepareStatement(INSERT_EMPLOYEES);
+            queryEmployees = conn.prepareStatement(QUERY_EMPLOYEES);
             insertIntoSales = conn.prepareStatement(INSERT_SALES);
 
             return true;
@@ -84,17 +83,21 @@ public class Datasource {
 
     public void close() {
         try {
-            if (conn != null) {
-                conn.close();
-            }
+
             if (querySalesByEmployeeId != null) {
                 querySalesByEmployeeId.close();
             }
             if (insertIntoEmployees != null) {
                 insertIntoEmployees.close();
             }
+            if (queryEmployees != null) {
+                queryEmployees.close();
+            }
             if (insertIntoSales != null) {
                 insertIntoSales.close();
+            }
+            if (conn != null) {
+                conn.close();
             }
         } catch (SQLException e) {
             System.out.println("Couldn't close connection: " + e.getMessage());
@@ -138,6 +141,7 @@ public class Datasource {
             System.out.println("Query failed: " + e.getMessage());
             return null;
         }
+
     }
     public List<Sale> querySaleForEmployeeId(int id) {
         try {
@@ -156,6 +160,26 @@ public class Datasource {
         } catch (SQLException e) {
             System.out.println("Query failed" + e.getMessage());
             return null;
+        }
+    }
+
+    public void insertEmployee(int id, String name) throws SQLException {
+
+        queryEmployees.setInt(1, id);
+        ResultSet results = queryEmployees.executeQuery();
+
+        if(!results.next()) {
+            insertIntoEmployees.setInt(1, id);
+            insertIntoEmployees.setString(2, name);
+
+            int affectedRows = insertIntoEmployees.executeUpdate();
+
+            if(affectedRows !=1) {
+                throw new SQLException("Couldn't insert employee!");
+            }
+        } else {
+            // pop up dialog saying employee exists already.
+            System.out.println("Employee exists already");
         }
     }
 }
