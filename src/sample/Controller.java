@@ -5,7 +5,6 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableView;
 import sample.model.Datasource;
 import sample.model.Employee;
@@ -60,6 +59,7 @@ public class Controller {
                         Datasource.getInstance().querySaleForEmployeeId(emp.getId()));
             }
         };
+        // figure out how to have 2 tableviews and switch between them
         salesTable.itemsProperty().bind(task.valueProperty());
     }
 //    @FXML
