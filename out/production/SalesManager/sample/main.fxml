@@ -52,6 +52,9 @@
                 </TableColumn>
             </columns>
         </TableView>
+        <!--<TableView fx:id="salesTable" visible="false">-->
+
+        <!--</TableView>-->
     </left>
     <center>
         <VBox style="-fx-background-color: white">
@@ -70,7 +73,7 @@
             </HBox>
             <HBox>
                 <children>
-                    <ProgressBar visible="false" prefWidth="300.0" progress="0.0">
+                    <ProgressBar fx:id="progressBar" visible="false" prefWidth="300.0" progress="0.0">
                         <HBox.margin>
                             <Insets left="35.0"/>
                         </HBox.margin>
