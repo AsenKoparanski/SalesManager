@@ -86,6 +86,7 @@
         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="170.00" spacing="20.0" BorderPane.alignment="CENTER">
             <children>
                 <Button onAction="#listEmployees" maxWidth="Infinity" mnemonicParsing="false" text="List Employees" />
+                <Button maxWidth="Infinity" mnemonicParsing="false" text="Add sale to employee" />
                 <Button onAction="#listSalesForEmployees" maxWidth="Infinity" mnemonicParsing="false" text="Show Sales of employee" />
                 <Button maxWidth="Infinity" mnemonicParsing="false" text="Update selected employee" />
                 <Button maxWidth="Infinity" mnemonicParsing="false" text="Update selected sale" />
