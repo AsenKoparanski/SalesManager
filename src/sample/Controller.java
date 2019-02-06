@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableView;
 import sample.model.Datasource;
@@ -17,17 +18,27 @@ import sample.model.Sale;
  */
 
 public class Controller {
+
+    @FXML
+    private ProgressBar progressBar;
     @FXML
     private TableView<Employee> employeeTable;
 
     @FXML
     private TableView<Sale> salesTable;
 
+    @FXML
     public void listEmployees() {
 
         Task<ObservableList<Employee>> task = new GetAllEmployeesTask();
-
         employeeTable.itemsProperty().bind(task.valueProperty());
+        progressBar.progressProperty().bind(task.progressProperty());
+
+        progressBar.setVisible(true);
+
+        task.setOnSucceeded(e -> progressBar.setVisible(false));
+        task.setOnFailed(e -> progressBar.setVisible(false));
+
         new Thread(task).start();
 
     }
@@ -36,6 +47,7 @@ public class Controller {
     public void listSalesForEmployees() {
         final Employee emp = (Employee) employeeTable.getSelectionModel().getSelectedItem();
         if (emp == null) {
+            // pop-up dialog here.
             System.out.println("No employee selected");
             return;
         }
@@ -48,7 +60,7 @@ public class Controller {
                         Datasource.getInstance().querySaleForEmployeeId(emp.getId()));
             }
         };
-        employeeTable.itemsProperty().bind(task.valueProperty());
+        salesTable.itemsProperty().bind(task.valueProperty());
     }
 //    @FXML
 //    public void handleClickListView() {
