@@ -6,6 +6,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.scene.chart.PieChart;
+import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableView;
@@ -14,6 +16,7 @@ import sample.model.Datasource;
 import sample.model.Employee;
 import sample.model.Sale;
 
+import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -34,7 +37,7 @@ public class Controller {
     private TableView<Employee> employeeTable;
 
     @FXML
-    public void listEmployees() {
+    public void init() {
 
         employeeTable.getSelectionModel().selectFirst();
         employeeTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Employee>() {
@@ -58,14 +61,8 @@ public class Controller {
         new Thread(task).start();
 
     }
-
     @FXML
     public void listSalesForEmployees(Employee emp) {
-        if (emp == null) {
-            // pop-up dialog here.
-            System.out.println("No employee selected");
-            return;
-        }
         Task<ObservableList<Sale>> task = new Task<ObservableList<Sale>>() {
             @Override
             protected ObservableList<Sale> call() throws Exception {
@@ -73,9 +70,7 @@ public class Controller {
                         Datasource.getInstance().querySaleForEmployeeId(emp.getId()));
             }
         };
-        // figure out how to have 2 tableviews and switch between them
         salesTable.itemsProperty().bind(task.valueProperty());
-//        salesTable.itemsProperty().bind(task.valueProperty());
 
         new Thread(task).start();
 //        salesTable.refresh();
