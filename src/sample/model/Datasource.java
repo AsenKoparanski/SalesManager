@@ -159,7 +159,7 @@ public class Datasource {
             }
             return sales;
         } catch (SQLException e) {
-            System.out.println("Query failed" + e.getMessage());
+            System.out.println("Query failed: " + e.getMessage());
             return null;
         }
     }
