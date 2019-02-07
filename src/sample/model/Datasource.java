@@ -1,5 +1,7 @@
 package sample.model;
 
+import sample.Controller;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +43,6 @@ public class Datasource {
     public static final String QUERY_SALES_BY_EMPLOYEE_ID = "SELECT * FROM " + TABLE_SALES +
             " WHERE " + COLUMN_SALESEMP_ID + " = ? ORDER BY " + COLUMN_SALES_DESCRIPTION + " COLLATE NOCASE";
 
-
     public static final String INSERT_EMPLOYEES = "INSERT INTO " + TABLE_EMPLOYEES +
             '(' + COLUMN_EMP_ID + ", " + COLUMN_EMP_NAME + ") VALUES(?, ?)";
 
@@ -49,8 +50,8 @@ public class Datasource {
             '(' + COLUMN_SALES_DESCRIPTION + ", " + COLUMN_SALES_DETAILS + ", " +
             COLUMN_SALESEMP_ID + ", " + COLUMN_SALES_DATE + ") VALUES(?, ?, ?, ?)";
 
-    private Connection conn;
 
+    private Connection conn;
     private PreparedStatement querySalesByEmployeeId;
     private PreparedStatement insertIntoEmployees;
     private PreparedStatement insertIntoSales;
@@ -147,7 +148,6 @@ public class Datasource {
         try {
             querySalesByEmployeeId.setInt(1, id);
             ResultSet results = querySalesByEmployeeId.executeQuery();
-
             List<Sale> sales = new ArrayList<>();
             while(results.next()) {
                 Sale sale = new Sale();
