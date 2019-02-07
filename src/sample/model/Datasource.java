@@ -1,5 +1,6 @@
 package sample.model;
 
+import javax.xml.transform.Result;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -191,17 +192,17 @@ public class Datasource {
     }
     public void insertSale(int empId, String description, String details, String date) throws SQLException {
         queryEmployees.setInt(1, empId);
-        int affectedRows = queryEmployees.executeUpdate();
+        ResultSet results = queryEmployees.executeQuery();
 
-        if (affectedRows > 0) {
+        if (results.next()) {
             insertIntoSales.setString(1, description);
             insertIntoSales.setString(2, details);
             insertIntoSales.setInt(3, empId);
             insertIntoSales.setString(4, date);
 
-            int affectedRows1 = insertIntoSales.executeUpdate();
+            int affectedRows = insertIntoSales.executeUpdate();
 
-            if (affectedRows1 !=1) {
+            if (affectedRows !=1) {
                 throw new SQLException("Couldn't insert sale!");
             }
         } else {
