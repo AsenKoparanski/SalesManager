@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableView;
 
 import sample.model.Datasource;
@@ -24,11 +25,12 @@ public class Controller {
     @FXML
     private ProgressBar progressBar;
     @FXML
-    private TableView employeeTable;
+    private TableView<Employee> employeeTable;
 
     @FXML
     public void listEmployees() {
-
+        employeeTable.getSelectionModel().selectFirst();
+        listSalesForEmployees();
         Task<ObservableList<Employee>> task = new GetAllEmployeesTask();
         employeeTable.itemsProperty().bind(task.valueProperty());
         progressBar.progressProperty().bind(task.progressProperty());
@@ -37,7 +39,8 @@ public class Controller {
 
         task.setOnSucceeded(e -> progressBar.setVisible(false));
         task.setOnFailed(e -> progressBar.setVisible(false));
-
+//        task.setOnSucceeded(e -> salesTable.setVisible(false));
+//        task.setOnFailed(e -> salesTable.setVisible(true));
 //        task.setOnSucceeded(e -> column1.setVisible(true));
 //        task.setOnFailed(e -> column1.setVisible(true));
 
@@ -61,7 +64,7 @@ public class Controller {
             }
         };
         // figure out how to have 2 tableviews and switch between them
-        employeeTable.itemsProperty().bind(task.valueProperty());
+        salesTable.itemsProperty().bind(task.valueProperty());
 //        salesTable.itemsProperty().bind(task.valueProperty());
 
         new Thread(task).start();
