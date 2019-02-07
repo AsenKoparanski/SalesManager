@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import sample.model.Datasource;
 import sample.model.Employee;
@@ -21,7 +22,7 @@ public class Controller {
     @FXML
     private ProgressBar progressBar;
     @FXML
-    private TableView<Employee> employeeTable;
+    private TableView employeeTable;
 
     @FXML
     private TableView<Sale> salesTable;
@@ -37,6 +38,9 @@ public class Controller {
 
         task.setOnSucceeded(e -> progressBar.setVisible(false));
         task.setOnFailed(e -> progressBar.setVisible(false));
+
+//        task.setOnSucceeded(e -> column1.setVisible(true));
+//        task.setOnFailed(e -> column1.setVisible(true));
 
         new Thread(task).start();
 
@@ -54,13 +58,15 @@ public class Controller {
             @Override
             protected ObservableList<Sale> call() throws Exception {
 
-
                 return FXCollections.observableArrayList(
                         Datasource.getInstance().querySaleForEmployeeId(emp.getId()));
             }
         };
         // figure out how to have 2 tableviews and switch between them
         salesTable.itemsProperty().bind(task.valueProperty());
+
+        new Thread(task).start();
+//        salesTable.refresh();
     }
 //    @FXML
 //    public void handleClickListView() {
@@ -73,7 +79,6 @@ public class Controller {
 class GetAllEmployeesTask extends Task {
     @Override
     public ObservableList<Employee> call() {
-
         return FXCollections.observableArrayList
                 (Datasource.getInstance().queryEmployees(Datasource.ORDER_BY_NONE));
 
