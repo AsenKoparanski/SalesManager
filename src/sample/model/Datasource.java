@@ -22,11 +22,11 @@ public class Datasource {
     public static final int INDEX_EMP_NAME = 2;
 
     public static final String TABLE_SALES = "sales";
-    public static final String COLUMN_SALES_NAME = "name";
+    public static final String COLUMN_SALES_DESCRIPTION = "description";
     public static final String COLUMN_SALES_DETAILS = "details";
     public static final String COLUMN_SALESEMP_ID = "id";
     public static final String COLUMN_SALES_DATE = "date";
-    public static final int INDEX_SALES_NAMES = 1;
+    public static final int INDEX_SALES_DESCRIPTION = 1;
     public static final int INDEX_SALES_DETAILS = 2;
     public static final int INDEX_SALESEMP_ID = 3;
     public static final int INDEX_SALES_DATE = 4;
@@ -39,14 +39,14 @@ public class Datasource {
             TABLE_EMPLOYEES + " WHERE " + COLUMN_EMP_ID + " = ?";
 
     public static final String QUERY_SALES_BY_EMPLOYEE_ID = "SELECT * FROM " + TABLE_SALES +
-            " WHERE " + COLUMN_SALESEMP_ID + " = ? ORDER BY " + COLUMN_SALES_NAME + " COLLATE NOCASE";
+            " WHERE " + COLUMN_SALESEMP_ID + " = ? ORDER BY " + COLUMN_SALES_DESCRIPTION + " COLLATE NOCASE";
 
 
     public static final String INSERT_EMPLOYEES = "INSERT INTO " + TABLE_EMPLOYEES +
             '(' + COLUMN_EMP_ID + ", " + COLUMN_EMP_NAME + ") VALUES(?, ?)";
 
     public static final String INSERT_SALES = "INSERT INTO " + TABLE_SALES +
-            '(' + COLUMN_SALES_NAME + ", " + COLUMN_SALES_DETAILS + ", " +
+            '(' + COLUMN_SALES_DESCRIPTION + ", " + COLUMN_SALES_DETAILS + ", " +
             COLUMN_SALESEMP_ID + ", " + COLUMN_SALES_DATE + ") VALUES(?, ?, ?, ?)";
 
     private Connection conn;
@@ -151,8 +151,7 @@ public class Datasource {
             List<Sale> sales = new ArrayList<>();
             while(results.next()) {
                 Sale sale = new Sale();
-                sale.setName(results.getString(1));
-                System.out.println(sale.getName());
+                sale.setDescription(results.getString(INDEX_SALES_DESCRIPTION));
                 sale.setDetails(results.getString(INDEX_SALES_DETAILS));
                 sale.setId(id);
                 sale.setDate(results.getString(INDEX_SALES_DATE));
