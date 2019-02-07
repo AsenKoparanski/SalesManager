@@ -38,11 +38,11 @@ public class Main extends Application {
             Platform.exit();
         }
 
-//        try {
-//            Datasource.getInstance().insertEmployee(138,"Halil");
-//        } catch (SQLException e) {
-//            System.out.println("Error: " + e.getMessage());
-//        }
+        try {
+            Datasource.getInstance().insertSale(132,"Halil's Record 3","Test","24.01.2019");
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
     }
 
     @Override
