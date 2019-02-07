@@ -189,7 +189,7 @@ public class Datasource {
             System.out.println("Employee exists already");
         }
     }
-    public void insertSale(int empId, String description, String details, String date) throws SQLException {
+    public boolean insertSale(int empId, String description, String details, String date) throws SQLException {
         queryEmployees.setInt(1, empId);
         ResultSet results = queryEmployees.executeQuery();
 
@@ -203,10 +203,16 @@ public class Datasource {
 
             if (affectedRows !=1) {
                 throw new SQLException("Couldn't insert sale!");
+            } else {
+                return true;
             }
         } else {
             System.out.println("That employee doesn't exist");
+            return false;
         }
+    }
+    public void Delete() {
+
     }
 }
 
