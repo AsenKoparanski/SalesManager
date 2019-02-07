@@ -5,8 +5,8 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+
 import sample.model.Datasource;
 import sample.model.Employee;
 import sample.model.Sale;
@@ -20,12 +20,11 @@ import sample.model.Sale;
 public class Controller {
 
     @FXML
+    private TableView<Sale> salesTable;
+    @FXML
     private ProgressBar progressBar;
     @FXML
     private TableView employeeTable;
-
-    @FXML
-    private TableView<Sale> salesTable;
 
     @FXML
     public void listEmployees() {
@@ -57,13 +56,13 @@ public class Controller {
         Task<ObservableList<Sale>> task = new Task<ObservableList<Sale>>() {
             @Override
             protected ObservableList<Sale> call() throws Exception {
-
                 return FXCollections.observableArrayList(
                         Datasource.getInstance().querySaleForEmployeeId(emp.getId()));
             }
         };
         // figure out how to have 2 tableviews and switch between them
-        salesTable.itemsProperty().bind(task.valueProperty());
+        employeeTable.itemsProperty().bind(task.valueProperty());
+//        salesTable.itemsProperty().bind(task.valueProperty());
 
         new Thread(task).start();
 //        salesTable.refresh();
