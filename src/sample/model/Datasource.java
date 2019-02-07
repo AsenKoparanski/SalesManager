@@ -39,8 +39,8 @@ public class Datasource {
     public static final String QUERY_EMPLOYEES = "SELECT " + COLUMN_EMP_ID + " FROM " +
             TABLE_EMPLOYEES + " WHERE " + COLUMN_EMP_ID + " = ?";
 
-    public static final String QUERY_SALES_BY_EMPLOYEE_ID = "SELECT * FROM " + TABLE_EMPLOYEES +
-            " WHERE " + COLUMN_EMP_ID + "  = ? ORDER BY " + COLUMN_EMP_NAME + " COLLATE NOCASE";
+    public static final String QUERY_SALES_BY_EMPLOYEE_ID = "SELECT * FROM " + TABLE_SALES +
+            " WHERE " + COLUMN_SALESEMP_ID + "  = ? ORDER BY " + COLUMN_SALES_DESCRIPTION + " COLLATE NOCASE";
 
     public static final String INSERT_EMPLOYEES = "INSERT INTO " + TABLE_EMPLOYEES +
             '(' + COLUMN_EMP_ID + ", " + COLUMN_EMP_NAME + ") VALUES(?, ?)";
@@ -155,6 +155,10 @@ public class Datasource {
                 sale.setDetails(results.getString(INDEX_SALES_DETAILS));
                 sale.setEmployeeId(results.getInt(INDEX_SALESEMP_ID));
                 sale.setDate(results.getString(INDEX_SALES_DATE));
+                System.out.println(sale.getDescription());
+                System.out.println(sale.getDate());
+                System.out.println(sale.getDetails());
+                System.out.println(sale.getEmployeeId());
             }
             return sales;
         } catch (SQLException e) {
