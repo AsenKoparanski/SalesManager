@@ -156,7 +156,7 @@ public class Datasource {
             List<Sale> sales = new ArrayList<>();
             while(results.next()) {
                 Sale sale = new Sale();
-                sale.setId(INDEX_SALES_ID);
+//                sale.setId(INDEX_SALES_ID);
                 sale.setDescription(results.getString(INDEX_SALES_DESCRIPTION));
                 sale.setDetails(results.getString(INDEX_SALES_DETAILS));
                 sale.setEmpId(INDEX_SALES_EMP_ID);
@@ -189,26 +189,23 @@ public class Datasource {
             System.out.println("Employee exists already");
         }
     }
-    public boolean insertSale(int empId, String description, String details, String date) throws SQLException {
+    public void insertSale(int empId, String description, String details, String date) throws SQLException {
         queryEmployees.setInt(1, empId);
-        ResultSet results = queryEmployees.executeQuery();
+        int affectedRows = queryEmployees.executeUpdate();
 
-        if (results.next()) {
+        if (affectedRows > 0) {
             insertIntoSales.setString(1, description);
             insertIntoSales.setString(2, details);
             insertIntoSales.setInt(3, empId);
             insertIntoSales.setString(4, date);
 
-            int affectedRows = insertIntoSales.executeUpdate();
+            int affectedRows1 = insertIntoSales.executeUpdate();
 
-            if (affectedRows !=1) {
+            if (affectedRows1 !=1) {
                 throw new SQLException("Couldn't insert sale!");
-            } else {
-                return true;
             }
         } else {
             System.out.println("That employee doesn't exist");
-            return false;
         }
     }
     public void Delete() {
