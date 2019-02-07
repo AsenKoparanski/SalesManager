@@ -11,24 +11,24 @@ import javafx.beans.property.SimpleStringProperty;
 
 public class Sale {
 
-    private SimpleStringProperty description;
+    private SimpleStringProperty name;
     private SimpleStringProperty details;
-    private SimpleIntegerProperty employeeId;
+    private SimpleIntegerProperty id;
     private SimpleStringProperty date;
 
     public Sale() {
-        this.description = new SimpleStringProperty();
+        this.name = new SimpleStringProperty();
         this.details = new SimpleStringProperty();
-        this.employeeId = new SimpleIntegerProperty();
+        this.id = new SimpleIntegerProperty();
         this.date = new SimpleStringProperty();
     }
 
-    public String getDescription() {
-        return description.get();
+    public String getName() {
+        return name.get();
     }
 
-    public void setDescription(String description) {
-        this.description.set(description);
+    public void setName(String name) {
+        this.name.set(name);
     }
 
     public String getDetails() {
@@ -40,12 +40,12 @@ public class Sale {
         this.details.set(details);
     }
 
-    public int getEmployeeId() {
-        return employeeId.get();
+    public int getId() {
+        return id.get();
     }
 
-    public void setEmployeeId(int employeeId) {
-        this.employeeId.set(employeeId);
+    public void setId(int id) {
+        this.id.set(id);
     }
 
     public String getDate() {
