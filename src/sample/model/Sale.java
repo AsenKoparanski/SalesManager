@@ -27,10 +27,6 @@ public class Sale {
         return description.get();
     }
 
-    public SimpleStringProperty descriptionProperty() {
-        return description;
-    }
-
     public void setDescription(String description) {
         this.description.set(description);
     }
@@ -39,9 +35,6 @@ public class Sale {
         return details.get();
     }
 
-    public SimpleStringProperty detailsProperty() {
-        return details;
-    }
 
     public void setDetails(String details) {
         this.details.set(details);
@@ -51,20 +44,12 @@ public class Sale {
         return employeeId.get();
     }
 
-    public SimpleIntegerProperty employeeIdProperty() {
-        return employeeId;
-    }
-
     public void setEmployeeId(int employeeId) {
         this.employeeId.set(employeeId);
     }
 
     public String getDate() {
         return date.get();
-    }
-
-    public SimpleStringProperty dateProperty() {
-        return date;
     }
 
     public void setDate(String date) {
