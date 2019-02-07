@@ -1,5 +1,7 @@
 package sample;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -12,6 +14,8 @@ import sample.model.Datasource;
 import sample.model.Employee;
 import sample.model.Sale;
 
+import java.time.format.DateTimeFormatter;
+
 /**
  * Author: Asen Koparanski
  * Purpose:
@@ -22,15 +26,26 @@ public class Controller {
 
     @FXML
     private TableView<Sale> salesTable;
+
     @FXML
     private ProgressBar progressBar;
+
     @FXML
     private TableView<Employee> employeeTable;
 
     @FXML
     public void listEmployees() {
+
         employeeTable.getSelectionModel().selectFirst();
-        listSalesForEmployees();
+        employeeTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Employee>() {
+            @Override
+            public void changed(ObservableValue<? extends Employee> observable, Employee oldValue, Employee newValue) {
+                if(newValue != null) {
+                    final Employee emp = (Employee) employeeTable.getSelectionModel().getSelectedItem();
+                    listSalesForEmployees(emp);
+                }
+            }
+        });
         Task<ObservableList<Employee>> task = new GetAllEmployeesTask();
         employeeTable.itemsProperty().bind(task.valueProperty());
         progressBar.progressProperty().bind(task.progressProperty());
@@ -39,18 +54,13 @@ public class Controller {
 
         task.setOnSucceeded(e -> progressBar.setVisible(false));
         task.setOnFailed(e -> progressBar.setVisible(false));
-//        task.setOnSucceeded(e -> salesTable.setVisible(false));
-//        task.setOnFailed(e -> salesTable.setVisible(true));
-//        task.setOnSucceeded(e -> column1.setVisible(true));
-//        task.setOnFailed(e -> column1.setVisible(true));
 
         new Thread(task).start();
 
     }
 
     @FXML
-    public void listSalesForEmployees() {
-        final Employee emp = (Employee) employeeTable.getSelectionModel().getSelectedItem();
+    public void listSalesForEmployees(Employee emp) {
         if (emp == null) {
             // pop-up dialog here.
             System.out.println("No employee selected");
