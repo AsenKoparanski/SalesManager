@@ -1,6 +1,5 @@
 package sample.model;
 
-import javax.xml.transform.Result;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -150,17 +149,19 @@ public class Datasource {
         }
 
     }
-    public List<Sale> querySaleForEmployeeId(int id) {
+    public List<Sale> querySalesByEmployeeId(int id) {
         try {
             querySalesByEmployeeId.setInt(1, id);
             ResultSet results = querySalesByEmployeeId.executeQuery();
+
             List<Sale> sales = new ArrayList<>();
             while(results.next()) {
+
                 Sale sale = new Sale();
-//                sale.setId(INDEX_SALES_ID);
+                sale.setId(INDEX_SALES_ID);
                 sale.setDescription(results.getString(INDEX_SALES_DESCRIPTION));
                 sale.setDetails(results.getString(INDEX_SALES_DETAILS));
-                sale.setEmpId(INDEX_SALES_EMP_ID);
+                sale.setEmpId(id);
                 sale.setDate(results.getString(INDEX_SALES_DATE));
                 sales.add(sale);
             }
