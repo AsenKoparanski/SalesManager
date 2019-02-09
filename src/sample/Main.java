@@ -23,7 +23,7 @@ public class Main extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("main.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
-        controller.listEmployees();
+        controller.init();
         primaryStage.setTitle("Sales Manager");
         primaryStage.setScene(new Scene(root, 800, 600));
         primaryStage.show();
@@ -37,8 +37,9 @@ public class Main extends Application {
             System.out.println("FATAL ERROR: Couldn't connect to database");
             Platform.exit();
         }
+
 //        try {
-//            Datasource.getInstance().insertEmployee(138,"Halil");
+//            Datasource.getInstance().insertSale(132,"Halil's Record 3","Test","24.01.2019");
 //        } catch (SQLException e) {
 //            System.out.println("Error: " + e.getMessage());
 //        }

@@ -22,14 +22,16 @@ public class Datasource {
     public static final int INDEX_EMP_NAME = 2;
 
     public static final String TABLE_SALES = "sales";
+    public static final String COLUMN_SALES_ID = "id";
     public static final String COLUMN_SALES_DESCRIPTION = "description";
     public static final String COLUMN_SALES_DETAILS = "details";
-    public static final String COLUMN_SALESEMP_ID = "id";
+    public static final String COLUMN_SALES_EMP_ID = "empId";
     public static final String COLUMN_SALES_DATE = "date";
-    public static final int INDEX_SALES_DESCRIPTION = 1;
-    public static final int INDEX_SALES_DETAILS = 2;
-    public static final int INDEX_SALESEMP_ID = 3;
-    public static final int INDEX_SALES_DATE = 4;
+    public static final int INDEX_SALES_ID = 1;
+    public static final int INDEX_SALES_DESCRIPTION = 2;
+    public static final int INDEX_SALES_DETAILS = 3;
+    public static final int INDEX_SALES_EMP_ID = 4;
+    public static final int INDEX_SALES_DATE = 5;
 
     public static final int ORDER_BY_NONE = 1;
     public static final int ORDER_BY_ASC = 2;
@@ -39,18 +41,22 @@ public class Datasource {
             TABLE_EMPLOYEES + " WHERE " + COLUMN_EMP_ID + " = ?";
 
     public static final String QUERY_SALES_BY_EMPLOYEE_ID = "SELECT * FROM " + TABLE_SALES +
-            " WHERE " + COLUMN_SALESEMP_ID + " = ? ORDER BY " + COLUMN_SALES_DESCRIPTION + " COLLATE NOCASE";
-
+            " WHERE " + COLUMN_SALES_EMP_ID + " = ? ORDER BY " + COLUMN_SALES_DESCRIPTION + " COLLATE NOCASE";
 
     public static final String INSERT_EMPLOYEES = "INSERT INTO " + TABLE_EMPLOYEES +
             '(' + COLUMN_EMP_ID + ", " + COLUMN_EMP_NAME + ") VALUES(?, ?)";
 
     public static final String INSERT_SALES = "INSERT INTO " + TABLE_SALES +
             '(' + COLUMN_SALES_DESCRIPTION + ", " + COLUMN_SALES_DETAILS + ", " +
-            COLUMN_SALESEMP_ID + ", " + COLUMN_SALES_DATE + ") VALUES(?, ?, ?, ?)";
+            COLUMN_SALES_EMP_ID + ", " + COLUMN_SALES_DATE + ") VALUES(?, ?, ?, ?)";
+
+    public static final String DELETE_EMPLOYEES = "DELETE FROM " + TABLE_EMPLOYEES +
+            " WHERE " + COLUMN_EMP_ID + " = ?";
+
+    public static final String DELETE_SALES = "DELETE FROM " + TABLE_SALES +
+            " WHERE " + COLUMN_SALES_ID + " = ?";
 
     private Connection conn;
-
     private PreparedStatement querySalesByEmployeeId;
     private PreparedStatement insertIntoEmployees;
     private PreparedStatement insertIntoSales;
@@ -143,23 +149,25 @@ public class Datasource {
         }
 
     }
-    public List<Sale> querySaleForEmployeeId(int id) {
+    public List<Sale> querySalesByEmployeeId(int id) {
         try {
             querySalesByEmployeeId.setInt(1, id);
             ResultSet results = querySalesByEmployeeId.executeQuery();
 
             List<Sale> sales = new ArrayList<>();
             while(results.next()) {
+
                 Sale sale = new Sale();
+                sale.setId(INDEX_SALES_ID);
                 sale.setDescription(results.getString(INDEX_SALES_DESCRIPTION));
                 sale.setDetails(results.getString(INDEX_SALES_DETAILS));
-                sale.setId(id);
+                sale.setEmpId(id);
                 sale.setDate(results.getString(INDEX_SALES_DATE));
                 sales.add(sale);
             }
             return sales;
         } catch (SQLException e) {
-            System.out.println("Query failed" + e.getMessage());
+            System.out.println("Query failed: " + e.getMessage());
             return null;
         }
     }
@@ -169,19 +177,41 @@ public class Datasource {
         queryEmployees.setInt(1, id);
         ResultSet results = queryEmployees.executeQuery();
 
-        if(!results.next()) {
+        if (!results.next()) {
             insertIntoEmployees.setInt(1, id);
             insertIntoEmployees.setString(2, name);
 
             int affectedRows = insertIntoEmployees.executeUpdate();
 
-            if(affectedRows !=1) {
+            if (affectedRows !=1) {
                 throw new SQLException("Couldn't insert employee!");
             }
         } else {
             // pop up dialog saying employee exists already.
             System.out.println("Employee exists already");
         }
+    }
+    public void insertSale(int empId, String description, String details, String date) throws SQLException {
+        queryEmployees.setInt(1, empId);
+        ResultSet results = queryEmployees.executeQuery();
+
+        if (results.next()) {
+            insertIntoSales.setString(1, description);
+            insertIntoSales.setString(2, details);
+            insertIntoSales.setInt(3, empId);
+            insertIntoSales.setString(4, date);
+
+            int affectedRows = insertIntoSales.executeUpdate();
+
+            if (affectedRows !=1) {
+                throw new SQLException("Couldn't insert sale!");
+            }
+        } else {
+            System.out.println("That employee doesn't exist");
+        }
+    }
+    public void Delete() {
+
     }
 }
 

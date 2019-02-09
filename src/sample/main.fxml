@@ -57,6 +57,9 @@
                 <VBox >
                     <children>
                         <TableView fx:id="salesTable">
+                            <placeholder>
+                                <Label text="Employee not selected or no Sales to show"/>
+                            </placeholder>
                             <columnResizePolicy>
                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                             </columnResizePolicy>
@@ -109,7 +112,7 @@
             <children>
                 <!--<Button maxWidth="Infinity" mnemonicParsing="false" onAction="#listEmployees" text="List Employees" />-->
                 <Button maxWidth="Infinity" mnemonicParsing="false" text="Add sale to employee" />
-                <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#listSalesForEmployees" text="Show Sales of employee" />
+                <!--<Button maxWidth="Infinity" mnemonicParsing="false" onAction="#listSalesForEmployees" text="Show Sales of employee" />-->
             </children>
             <BorderPane.margin>
                 <Insets left="10.0" right="10.0" />
