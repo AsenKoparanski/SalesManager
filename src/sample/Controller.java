@@ -6,18 +6,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.scene.chart.PieChart;
-import javafx.scene.control.Label;
+
 import javafx.scene.control.ProgressBar;
-import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableView;
 
 import sample.model.Datasource;
 import sample.model.Employee;
 import sample.model.Sale;
-
-import java.sql.SQLException;
-import java.time.format.DateTimeFormatter;
 
 /**
  * Author: Asen Koparanski
@@ -67,7 +62,7 @@ public class Controller {
             @Override
             protected ObservableList<Sale> call() throws Exception {
                 return FXCollections.observableArrayList(
-                        Datasource.getInstance().querySaleForEmployeeId(emp.getId()));
+                        Datasource.getInstance().querySalesByEmployeeId(emp.getId()));
             }
         };
         salesTable.itemsProperty().bind(task.valueProperty());
@@ -75,6 +70,7 @@ public class Controller {
         new Thread(task).start();
 //        salesTable.refresh();
     }
+
 //    @FXML
 //    public void handleClickListView() {
 //        TodoItem item = todoListView.getSelectionModel().getSelectedItem();
@@ -82,6 +78,7 @@ public class Controller {
 //        deadlineLabel.setText(item.getDeadline().toString());
 //    }
 }
+
 // Helper class to run a background thread for a potentially longer task.
 class GetAllEmployeesTask extends Task {
     @Override
