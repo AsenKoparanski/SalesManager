@@ -21,6 +21,7 @@ public class Sale {
         this.description = new SimpleStringProperty();
         this.details = new SimpleStringProperty();
         this.id = new SimpleIntegerProperty();
+        this.empId = new SimpleIntegerProperty();
         this.date = new SimpleStringProperty();
     }
     public int getId() {
