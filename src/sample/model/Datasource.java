@@ -113,7 +113,7 @@ public class Datasource {
         }
     }
 
-    public ObservableList<Employee> queryEmployees(int sortOrder) {
+    public List<Employee> queryEmployees(int sortOrder) {
 
         StringBuilder sb = new StringBuilder("SELECT * FROM ");
         sb.append(TABLE_EMPLOYEES);
@@ -131,7 +131,7 @@ public class Datasource {
         try (Statement statement = conn.createStatement();
              ResultSet results = statement.executeQuery(sb.toString())) {
 
-            ObservableList<Employee> employees = FXCollections.observableArrayList();
+            List<Employee> employees = new ArrayList<>();
             while (results.next()) {
                 try {
                     Thread.sleep(20);
