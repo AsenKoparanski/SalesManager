@@ -25,7 +25,7 @@ public class Main extends Application {
         Controller controller = loader.getController();
         controller.init();
         primaryStage.setTitle("Sales Manager");
-        primaryStage.setScene(new Scene(root, 800, 600));
+        primaryStage.setScene(new Scene(root, 900, 600));
         primaryStage.show();
     }
 
