@@ -59,7 +59,7 @@
                     <children>
                         <TableView fx:id="salesTable">
                             <placeholder>
-                                <Label text="Employee not selected or no Sales to show"/>
+                                <Label text="No Employee selected."/>
                             </placeholder>
                             <columnResizePolicy>
                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
