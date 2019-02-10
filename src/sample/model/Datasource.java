@@ -1,5 +1,8 @@
 package sample.model;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -110,7 +113,7 @@ public class Datasource {
         }
     }
 
-    public List<Employee> queryEmployees(int sortOrder) {
+    public ObservableList<Employee> queryEmployees(int sortOrder) {
 
         StringBuilder sb = new StringBuilder("SELECT * FROM ");
         sb.append(TABLE_EMPLOYEES);
@@ -128,7 +131,7 @@ public class Datasource {
         try (Statement statement = conn.createStatement();
              ResultSet results = statement.executeQuery(sb.toString())) {
 
-            List<Employee> employees = new ArrayList<>();
+            ObservableList<Employee> employees = FXCollections.observableArrayList();
             while (results.next()) {
                 try {
                     Thread.sleep(20);
