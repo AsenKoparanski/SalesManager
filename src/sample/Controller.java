@@ -8,6 +8,7 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 
 import javafx.fxml.FXMLLoader;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 
 import javafx.scene.layout.BorderPane;
@@ -16,6 +17,7 @@ import sample.model.Employee;
 import sample.model.Sale;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -48,7 +50,7 @@ public class Controller {
         task.setOnFailed(e -> progressBar.setVisible(false));
         new Thread(task).start();
     }
-    
+
     @FXML
     public void employeeClickListener() {
         employeeTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Employee>() {
@@ -57,9 +59,18 @@ public class Controller {
                 if(newValue != null) {
                     final Employee emp = (Employee) employeeTable.getSelectionModel().getSelectedItem();
                     listSalesForEmployees(emp);
+                    checkIfAnySaleRecords(emp);
                 }
             }
         });
+    }
+
+    @FXML
+    public void checkIfAnySaleRecords(Employee emp) {
+        List<Sale> salesList = Datasource.getInstance().querySalesByEmployeeId(emp.getId());
+        if (salesList.size() == 0) {
+            salesTable.setPlaceholder(new Label("Employee has no sale records."));
+        }
     }
 
     @FXML
@@ -85,6 +96,7 @@ public class Controller {
             employeeTable.getItems().add(controller.addEmployee());
         }
     }
+
     @FXML
     public void listSalesForEmployees(Employee emp) {
         Task<ObservableList<Sale>> task = new Task<ObservableList<Sale>>() {
