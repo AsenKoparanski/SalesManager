@@ -7,12 +7,16 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TableView;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.*;
 
+import javafx.scene.layout.BorderPane;
 import sample.model.Datasource;
 import sample.model.Employee;
 import sample.model.Sale;
+
+import java.io.IOException;
+import java.util.Optional;
 
 /**
  * Author: Asen Koparanski
@@ -21,6 +25,9 @@ import sample.model.Sale;
  */
 
 public class Controller {
+
+    @FXML
+    private BorderPane mainBorderPane;
 
     @FXML
     private TableView<Sale> salesTable;
@@ -34,7 +41,6 @@ public class Controller {
     @FXML
     public void init() {
 
-        employeeTable.getSelectionModel().selectFirst();
         employeeTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Employee>() {
             @Override
             public void changed(ObservableValue<? extends Employee> observable, Employee oldValue, Employee newValue) {
@@ -47,14 +53,58 @@ public class Controller {
         Task<ObservableList<Employee>> task = new GetAllEmployeesTask();
         employeeTable.itemsProperty().bind(task.valueProperty());
         progressBar.progressProperty().bind(task.progressProperty());
-
         progressBar.setVisible(true);
-
         task.setOnSucceeded(e -> progressBar.setVisible(false));
         task.setOnFailed(e -> progressBar.setVisible(false));
-
         new Thread(task).start();
 
+    }
+    @FXML
+    public void refreshTable() {
+        employeeTable.getSelectionModel().select(-1);
+        salesTable.getItems().clear();
+        Task<ObservableList<Employee>> task = new GetAllEmployeesTask();
+        employeeTable.itemsProperty().bind(task.valueProperty());
+        new Thread(task).start();
+
+//        employeeTable.refresh();
+//        employeeTable.getColumns().get(0).setVisible(false);
+//        employeeTable.getColumns().get(1).setVisible(false);
+//        employeeTable.getColumns().get(0).setVisible(true);
+//        employeeTable.getColumns().get(1).setVisible(true);
+    }
+
+    @FXML
+    public void showAddEmployeeDialog() {
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.initOwner(mainBorderPane.getScene().getWindow());
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("employeeDialog.fxml"));
+        try {
+            dialog.getDialogPane().setContent(fxmlLoader.load());
+
+        } catch (IOException e) {
+            System.out.println("Couldn't load dialog");
+            e.printStackTrace();
+            return;
+        }
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
+        Optional<ButtonType> result = dialog.showAndWait();
+
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            EmployeeDialogController controller = fxmlLoader.getController();
+            controller.addEmployee();
+//            employeeTable.refresh();
+
+//            employeeTable.getSelectionModel().select(-1);
+//            ObservableList<Employee> empList = employeeTable.getItems();
+//            empList.add(controller.addEmployee());
+//            employeeTable.setItems(FXCollections.observableArrayList(empList));
+//            employeeTable.getSelectionModel().select(controller.addEmployee());
+//            employeeTable.getItems().clear();
+//            employeeTable.getItems().addAll(empList);
+        }
     }
     @FXML
     public void listSalesForEmployees(Employee emp) {
@@ -66,9 +116,7 @@ public class Controller {
             }
         };
         salesTable.itemsProperty().bind(task.valueProperty());
-
         new Thread(task).start();
-//        salesTable.refresh();
     }
 
 //    @FXML
