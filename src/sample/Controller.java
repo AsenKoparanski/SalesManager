@@ -39,8 +39,18 @@ public class Controller {
     private TableView<Employee> employeeTable;
 
     @FXML
-    public void init() {
-
+    public void getAllEmployees() {
+        Task<ObservableList<Employee>> task = new GetAllEmployeesTask();
+        employeeTable.itemsProperty().bind(task.valueProperty());
+        progressBar.progressProperty().bind(task.progressProperty());
+        progressBar.setVisible(true);
+        task.setOnSucceeded(e -> progressBar.setVisible(false));
+        task.setOnFailed(e -> progressBar.setVisible(false));
+        new Thread(task).start();
+    }
+    
+    @FXML
+    public void employeeClickListener() {
         employeeTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Employee>() {
             @Override
             public void changed(ObservableValue<? extends Employee> observable, Employee oldValue, Employee newValue) {
@@ -50,28 +60,6 @@ public class Controller {
                 }
             }
         });
-        Task<ObservableList<Employee>> task = new GetAllEmployeesTask();
-        employeeTable.itemsProperty().bind(task.valueProperty());
-        progressBar.progressProperty().bind(task.progressProperty());
-        progressBar.setVisible(true);
-        task.setOnSucceeded(e -> progressBar.setVisible(false));
-        task.setOnFailed(e -> progressBar.setVisible(false));
-        new Thread(task).start();
-
-    }
-    @FXML
-    public void refreshTable() {
-        employeeTable.getSelectionModel().select(-1);
-        salesTable.getItems().clear();
-        Task<ObservableList<Employee>> task = new GetAllEmployeesTask();
-        employeeTable.itemsProperty().bind(task.valueProperty());
-        new Thread(task).start();
-
-//        employeeTable.refresh();
-//        employeeTable.getColumns().get(0).setVisible(false);
-//        employeeTable.getColumns().get(1).setVisible(false);
-//        employeeTable.getColumns().get(0).setVisible(true);
-//        employeeTable.getColumns().get(1).setVisible(true);
     }
 
     @FXML
@@ -94,16 +82,7 @@ public class Controller {
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
             EmployeeDialogController controller = fxmlLoader.getController();
-            controller.addEmployee();
-//            employeeTable.refresh();
-
-//            employeeTable.getSelectionModel().select(-1);
-//            ObservableList<Employee> empList = employeeTable.getItems();
-//            empList.add(controller.addEmployee());
-//            employeeTable.setItems(FXCollections.observableArrayList(empList));
-//            employeeTable.getSelectionModel().select(controller.addEmployee());
-//            employeeTable.getItems().clear();
-//            employeeTable.getItems().addAll(empList);
+            employeeTable.getItems().add(controller.addEmployee());
         }
     }
     @FXML
