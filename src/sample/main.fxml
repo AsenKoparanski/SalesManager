@@ -111,7 +111,7 @@
     <right>
         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="170.00" spacing="20.0" BorderPane.alignment="CENTER">
             <children>
-                <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#refreshTable" text="Refresh Employee table" />
+                <!--<Button maxWidth="Infinity" mnemonicParsing="false" onAction="#refreshTable" text="Refresh Employee table" />-->
                 <Button maxWidth="Infinity" mnemonicParsing="false" text="Add sale to employee" />
                 <!--<Button maxWidth="Infinity" mnemonicParsing="false" onAction="#listSalesForEmployees" text="Show Sales of employee" />-->
             </children>
