@@ -16,20 +16,21 @@ public class EmployeeDialogController {
     private TextField empName;
 
 
-    public void addEmployee() {
+    public Employee addEmployee() {
         String idToInt = empId.getText().trim();
         int employeeId = Integer.parseInt(idToInt);
 
         String employeeName = empName.getText().trim();
         Employee emp = new Employee();
-//        emp.setId(employeeId);
-//        emp.setName(employeeName);
+        emp.setId(employeeId);
+        emp.setName(employeeName);
+
         try {
             Datasource.getInstance().insertEmployee(employeeId, employeeName);
         } catch (SQLException e) {
             System.out.println("Failed inserting employee" + e.getMessage());
         }
-//        return emp;
+        return emp;
     }
 }
 
