@@ -59,19 +59,20 @@ public class Controller {
                 if(newValue != null) {
                     final Employee emp = (Employee) employeeTable.getSelectionModel().getSelectedItem();
                     listSalesForEmployees(emp);
-                    checkIfAnySaleRecords(emp);
+//                    checkIfAnySaleRecords(emp);
                 }
             }
         });
     }
 
-    @FXML
-    public void checkIfAnySaleRecords(Employee emp) {
-        List<Sale> salesList = Datasource.getInstance().querySalesByEmployeeId(emp.getId());
-        if (salesList.size() == 0) {
-            salesTable.setPlaceholder(new Label("Employee has no sale records."));
-        }
-    }
+//    @FXML
+//    public void checkIfAnySaleRecords(Employee emp) {
+//        List<Sale> salesList = Datasource.getInstance().querySalesByEmployeeId(emp.getId());
+//        if (salesList.isEmpty()) {
+//            salesTable.setPlaceholder(new Label("Employee has no sale records."));
+//        }
+//        salesList.clear();
+//    }
 
     @FXML
     public void showAddEmployeeDialog() {
