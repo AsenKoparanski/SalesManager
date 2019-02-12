@@ -83,7 +83,7 @@ public class Datasource {
             insertIntoEmployees = conn.prepareStatement(INSERT_EMPLOYEES);
             queryEmployees = conn.prepareStatement(QUERY_EMPLOYEES);
             insertIntoSales = conn.prepareStatement(INSERT_SALES);
-            deleteEmployees = conn.prepareStatement(DELETE_EMPLOYEES)
+            deleteEmployees = conn.prepareStatement(DELETE_EMPLOYEES);
 
             return true;
         } catch (SQLException e) {
