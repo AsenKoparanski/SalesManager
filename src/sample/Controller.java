@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.beans.binding.DoubleBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -49,6 +50,7 @@ public class Controller {
         task.setOnSucceeded(e -> progressBar.setVisible(false));
         task.setOnFailed(e -> progressBar.setVisible(false));
         new Thread(task).start();
+
     }
 
     @FXML
