@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.beans.binding.DoubleBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -7,12 +8,18 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TableView;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.chart.PieChart;
+import javafx.scene.control.*;
 
+import javafx.scene.layout.BorderPane;
 import sample.model.Datasource;
 import sample.model.Employee;
 import sample.model.Sale;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Author: Asen Koparanski
@@ -21,6 +28,9 @@ import sample.model.Sale;
  */
 
 public class Controller {
+
+    @FXML
+    private BorderPane mainBorderPane;
 
     @FXML
     private TableView<Sale> salesTable;
@@ -32,30 +42,64 @@ public class Controller {
     private TableView<Employee> employeeTable;
 
     @FXML
-    public void init() {
+    public void getAllEmployees() {
+        Task<ObservableList<Employee>> task = new GetAllEmployeesTask();
+        employeeTable.itemsProperty().bind(task.valueProperty());
+        progressBar.progressProperty().bind(task.progressProperty());
+        progressBar.setVisible(true);
+        task.setOnSucceeded(e -> progressBar.setVisible(false));
+        task.setOnFailed(e -> progressBar.setVisible(false));
+        new Thread(task).start();
 
-        employeeTable.getSelectionModel().selectFirst();
+    }
+
+    @FXML
+    public void employeeClickListener() {
         employeeTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Employee>() {
             @Override
             public void changed(ObservableValue<? extends Employee> observable, Employee oldValue, Employee newValue) {
                 if(newValue != null) {
                     final Employee emp = (Employee) employeeTable.getSelectionModel().getSelectedItem();
                     listSalesForEmployees(emp);
+//                    checkIfAnySaleRecords(emp);
                 }
             }
         });
-        Task<ObservableList<Employee>> task = new GetAllEmployeesTask();
-        employeeTable.itemsProperty().bind(task.valueProperty());
-        progressBar.progressProperty().bind(task.progressProperty());
-
-        progressBar.setVisible(true);
-
-        task.setOnSucceeded(e -> progressBar.setVisible(false));
-        task.setOnFailed(e -> progressBar.setVisible(false));
-
-        new Thread(task).start();
-
     }
+
+//    @FXML
+//    public void checkIfAnySaleRecords(Employee emp) {
+//        List<Sale> salesList = Datasource.getInstance().querySalesByEmployeeId(emp.getId());
+//        if (salesList.isEmpty()) {
+//            salesTable.setPlaceholder(new Label("Employee has no sale records."));
+//        }
+//        salesList.clear();
+//    }
+
+    @FXML
+    public void showAddEmployeeDialog() {
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.initOwner(mainBorderPane.getScene().getWindow());
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("employeeDialog.fxml"));
+        try {
+            dialog.getDialogPane().setContent(fxmlLoader.load());
+
+        } catch (IOException e) {
+            System.out.println("Couldn't load dialog");
+            e.printStackTrace();
+            return;
+        }
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
+        Optional<ButtonType> result = dialog.showAndWait();
+
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            EmployeeDialogController controller = fxmlLoader.getController();
+            employeeTable.getItems().add(controller.addEmployee());
+        }
+    }
+
     @FXML
     public void listSalesForEmployees(Employee emp) {
         Task<ObservableList<Sale>> task = new Task<ObservableList<Sale>>() {
@@ -66,9 +110,7 @@ public class Controller {
             }
         };
         salesTable.itemsProperty().bind(task.valueProperty());
-
         new Thread(task).start();
-//        salesTable.refresh();
     }
 
 //    @FXML

@@ -1,5 +1,8 @@
 package sample.model;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +64,7 @@ public class Datasource {
     private PreparedStatement insertIntoEmployees;
     private PreparedStatement insertIntoSales;
     private PreparedStatement queryEmployees;
+    private PreparedStatement deleteEmployees;
 
     private static Datasource instance = new Datasource();
 
@@ -79,6 +83,7 @@ public class Datasource {
             insertIntoEmployees = conn.prepareStatement(INSERT_EMPLOYEES);
             queryEmployees = conn.prepareStatement(QUERY_EMPLOYEES);
             insertIntoSales = conn.prepareStatement(INSERT_SALES);
+            deleteEmployees = conn.prepareStatement(DELETE_EMPLOYEES);
 
             return true;
         } catch (SQLException e) {
@@ -89,7 +94,9 @@ public class Datasource {
 
     public void close() {
         try {
-
+            if (deleteEmployees != null) {
+                deleteEmployees.close();
+            }
             if (querySalesByEmployeeId != null) {
                 querySalesByEmployeeId.close();
             }
@@ -210,8 +217,19 @@ public class Datasource {
             System.out.println("That employee doesn't exist");
         }
     }
-    public void Delete() {
+    public void deleteEmployee(int id) throws SQLException {
 
+        deleteEmployees.setInt(1, id);
+        int affectedRows = deleteEmployees.executeUpdate();
+
+        if (affectedRows != 1) {
+            throw new SQLException("Delete Employee failed!");
+        }
+
+    }
+
+    public void deleteSales() {
+        // TO DO
     }
 }
 
