@@ -1,6 +1,5 @@
 package sample;
 
-import javafx.beans.binding.DoubleBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -9,7 +8,6 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 
 import javafx.scene.layout.BorderPane;
@@ -18,7 +16,7 @@ import sample.model.Employee;
 import sample.model.Sale;
 
 import java.io.IOException;
-import java.util.List;
+import java.sql.SQLException;
 import java.util.Optional;
 
 /**
@@ -76,12 +74,13 @@ public class Controller {
 //        salesList.clear();
 //    }
 
-    @FXML
-    public void showAddEmployeeDialog() {
+        @FXML
+    public void addEmployeeButton() {
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.initOwner(mainBorderPane.getScene().getWindow());
+        dialog.setTitle("Add Employee");
         FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("employeeDialog.fxml"));
+        fxmlLoader.setLocation(getClass().getResource("AddEmployeeDialog.fxml"));
         try {
             dialog.getDialogPane().setContent(fxmlLoader.load());
 
@@ -95,9 +94,32 @@ public class Controller {
         Optional<ButtonType> result = dialog.showAndWait();
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            EmployeeDialogController controller = fxmlLoader.getController();
+            AddEmployeeDialog controller = fxmlLoader.getController();
             employeeTable.getItems().add(controller.addEmployee());
         }
+    }
+    @FXML
+    public void deleteEmployeeButton() {
+        // prompt are you sure you want to delete employee - deleting will delete their sales bla bla
+        // check if emp null, no employee selected prompt. select an employee you would like to delete
+        final Employee emp = (Employee) employeeTable.getSelectionModel().getSelectedItem();
+        try {
+            if (Datasource.getInstance().deleteEmployee(emp.getId())) {
+                employeeTable.getItems().remove(emp);
+            }
+        } catch (SQLException e) {
+            System.out.println("Failed to delete employee" + e.getMessage());
+        }
+    }
+
+    @FXML
+    public void addSaleButton() {
+
+    }
+
+    @FXML
+    public void deleteSaleButton() {
+
     }
 
     @FXML
