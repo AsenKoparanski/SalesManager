@@ -56,8 +56,10 @@ public class Datasource {
     public static final String DELETE_EMPLOYEES = "DELETE FROM " + TABLE_EMPLOYEES +
             " WHERE " + COLUMN_EMP_ID + " = ?";
 
-    public static final String DELETE_SALES = "DELETE FROM " + TABLE_SALES +
+//    public static final String DELETE_SALES_BY_EMP_ID =
+    public static final String DELETE_SALES_BY_ID = "DELETE FROM " + TABLE_SALES +
             " WHERE " + COLUMN_SALES_ID + " = ?";
+
 
     private Connection conn;
     private PreparedStatement querySalesByEmployeeId;
@@ -92,6 +94,7 @@ public class Datasource {
         }
     }
 
+    @SuppressWarnings("Duplicates")
     public void close() {
         try {
             if (deleteEmployees != null) {
@@ -154,8 +157,8 @@ public class Datasource {
             System.out.println("Query failed: " + e.getMessage());
             return null;
         }
-
     }
+
     public List<Sale> querySalesByEmployeeId(int id) {
         try {
             querySalesByEmployeeId.setInt(1, id);
@@ -198,6 +201,7 @@ public class Datasource {
             System.out.println("Employee exists already");
         }
     }
+
     public void insertSale(int empId, String description, String details, String date) throws SQLException {
         queryEmployees.setInt(1, empId);
         ResultSet results = queryEmployees.executeQuery();
@@ -217,15 +221,17 @@ public class Datasource {
             System.out.println("That employee doesn't exist");
         }
     }
-    public void deleteEmployee(int id) throws SQLException {
+
+    public boolean deleteEmployee(int id) throws SQLException {
 
         deleteEmployees.setInt(1, id);
         int affectedRows = deleteEmployees.executeUpdate();
 
         if (affectedRows != 1) {
             throw new SQLException("Delete Employee failed!");
+        } else {
+            return true;
         }
-
     }
 
     public void deleteSales() {
