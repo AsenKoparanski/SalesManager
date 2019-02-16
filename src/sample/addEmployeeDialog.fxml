@@ -12,30 +12,15 @@
          Fill in both fields to add a new Employee.
     </headerText>
     <content>
-        <GridPane>
-            <Label text="ID: " GridPane.columnIndex="0" GridPane.rowIndex="0">
+        <GridPane vgap="5" hgap="5">
+            <Label text="ID: " GridPane.columnIndex="0" GridPane.rowIndex="0" >
                 <GridPane.margin>
-                    <Insets top="20.0" left="20.0" />
+                <Insets left="20.0" />
                 </GridPane.margin>
             </Label>
-            <TextField fx:id="empId" prefWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                <GridPane.margin>
-                    <Insets top="20.0" />
-                </GridPane.margin>
-            </TextField>
-            <Label text="Name: " GridPane.columnIndex="0" GridPane.rowIndex="3">
-                <GridPane.margin>
-                    <Insets top="20.0" />
-                </GridPane.margin>
-            </Label>
-
-            <TextField fx:id="empName" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                <GridPane.margin>
-                    <Insets top="20.0" />
-                </GridPane.margin>
-            </TextField>
-
-
+            <TextField fx:id="empId" maxWidth="60" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+            <Label text="Name: " GridPane.columnIndex="0" GridPane.rowIndex="3" />
+            <TextField fx:id="empName" GridPane.columnIndex="1" GridPane.rowIndex="3" />
         </GridPane>
     </content>
 </DialogPane>
