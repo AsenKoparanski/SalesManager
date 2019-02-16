@@ -1,14 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
+<DialogPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="sample.AddSaleDialog"
-            prefHeight="400.0" prefWidth="600.0">
+            prefHeight="400.0" prefWidth="350.0">
 
-</AnchorPane>
+    <headerText>
+        Fill in all fields to add a Sale to an Employee.
+    </headerText>
+    <content>
+        <GridPane vgap="5" hgap="5">
+
+            <Label text="Employee ID: " GridPane.rowIndex="0"/>
+            <Label text="Employee name: " GridPane.rowIndex="1"/>
+
+            <Label text="Description: " GridPane.rowIndex="2" />
+            <TextField fx:id="descriptionField" maxWidth="300" GridPane.rowIndex="3" />
+            <Label text="Details: " GridPane.rowIndex="4" />
+            <TextArea fx:id="detailsArea" maxWidth="300"  GridPane.rowIndex="5" wrapText="true"/>
+            <Label text="Date: " GridPane.rowIndex="6" />
+            <DatePicker fx:id="saleDatePicker" GridPane.rowIndex="7" />
+        </GridPane>
+    </content>
+</DialogPane>
