@@ -16,13 +16,14 @@
 <?import javafx.scene.layout.VBox?>
 
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.layout.Pane?>
 <BorderPane fx:id="mainBorderPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
     <top>
         <MenuBar>
             <menus>
-                <Menu text="Employee">
+                <Menu text="File">
                     <items>
-                        <MenuItem fx:id="menuAdd" text="Add" mnemonicParsing="true" onAction="#showAddEmployeeDialog"/>
+                        <MenuItem text="Help" mnemonicParsing="true" />
                     </items>
                     <!--<items>-->
                         <!--<MenuItem text="Edit" onAction="#showEditContactDialog"/>-->
@@ -38,7 +39,8 @@
     <left>
         <VBox >
             <children>
-                <TableView maxWidth="230" minWidth="230" VBox.vgrow="ALWAYS" fx:id="employeeTable">
+                <Label text="Employee Table"/>
+                <TableView fx:id="employeeTable" maxWidth="230" minWidth="230" VBox.vgrow="ALWAYS">
                     <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                     </columnResizePolicy>
@@ -55,16 +57,23 @@
                         </TableColumn>
                     </columns>
                 </TableView>
-
             </children>
+            <Pane>
+                <children>
+                    <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#addEmployeeButton" text="Add employee" layoutY="10" layoutX="5"/>
+                    <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#deleteEmployeeButton" text="Delete employee" layoutX="110" layoutY="10"/>
+                    <Button maxWidth="Infinity" mnemonicParsing="false"  layoutX="20" layoutY="20" visible="false"/>
+                </children>
+            </Pane>
         </VBox>
     </left>
     <center>
         <VBox >
             <children>
+                <Label text="Sales Table"/>
                 <TableView fx:id="salesTable" maxWidth="230" minWidth="230" VBox.vgrow="ALWAYS">
                     <placeholder>
-                        <Label text="No Employee selected or no sales to show."/>
+                        <Label text="No Employee selected or no sales to show"/>
                     </placeholder>
                     <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -83,34 +92,27 @@
                     </columns>
                 </TableView>
             </children>
-            <HBox>
+            <Pane>
                 <children>
-                    <Button maxWidth="Infinity" mnemonicParsing="false"  text="Add sale" />
-                    <Button maxWidth="Infinity" mnemonicParsing="false" text="Delete sale" alignment="TOP_RIGHT" />
+                    <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#addSaleButton" text="Add sale" layoutX="35" layoutY="10" />
+                    <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#deleteSaleButton" text="Delete sale" layoutX="120" layoutY="10"/>
+                    <Button maxWidth="Infinity" mnemonicParsing="false"  layoutX="20" layoutY="20" visible="false"/>
                 </children>
-            </HBox>
+            </Pane>
         </VBox>
     </center>
     <right>
-        <VBox style="-fx-background-color: white">
-            <TextArea fx:id="itemDetailsTextArea" VBox.vgrow="ALWAYS" />
+        <VBox>
             <HBox>
-                <Label style="-fx-background-color: white" text="Date achieved: " visible="false">
-                    <font>
-                        <!--<Font description="Times New Roman bold" size="20" />-->
-                    </font>
-                </Label>
-                <Label fx:id="deadlineLabel" style="-fx-background-color: white">
-                    <font>
-                        <!--<Font description="Times New Roman bold" size="20" />-->
-                    </font>
-                </Label>
+                <Label text="test" VBox.vgrow="ALWAYS"/>
             </HBox>
-            <HBox>
+            <TextArea fx:id="itemDetailsTextArea" VBox.vgrow="ALWAYS" />
+            <TextArea fx:id="itemDetailsTextArea1" VBox.vgrow="ALWAYS" />
+            <HBox prefHeight="45">
                 <children>
                     <ProgressBar fx:id="progressBar" prefWidth="300.0" progress="0.0" visible="false">
                         <HBox.margin>
-                            <Insets left="35.0" />
+                            <Insets left="65.0" top="15" />
                         </HBox.margin>
                     </ProgressBar>
                 </children>
