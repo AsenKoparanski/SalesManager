@@ -40,6 +40,12 @@ public class Controller {
     private TableView<Employee> employeeTable;
 
     @FXML
+    private Label salesNameLabel;
+
+    @FXML
+    private TextField empNameTextField;
+
+    @FXML
     public void getAllEmployees() {
         Task<ObservableList<Employee>> task = new GetAllEmployeesTask();
         employeeTable.itemsProperty().bind(task.valueProperty());
@@ -48,7 +54,6 @@ public class Controller {
         task.setOnSucceeded(e -> progressBar.setVisible(false));
         task.setOnFailed(e -> progressBar.setVisible(false));
         new Thread(task).start();
-
     }
 
     @FXML
@@ -59,12 +64,38 @@ public class Controller {
                 if(newValue != null) {
                     final Employee emp = (Employee) employeeTable.getSelectionModel().getSelectedItem();
                     listSalesForEmployees(emp);
+                    empNameTextField.setText(emp.getName());
 //                    checkIfAnySaleRecords(emp);
                 }
             }
         });
     }
 
+    @FXML
+    public void listSalesForEmployees(Employee emp) {
+        Task<ObservableList<Sale>> task = new Task<ObservableList<Sale>>() {
+            @Override
+            protected ObservableList<Sale> call() throws Exception {
+                return FXCollections.observableArrayList(
+                        Datasource.getInstance().querySalesByEmployeeId(emp.getId()));
+            }
+        };
+        salesTable.itemsProperty().bind(task.valueProperty());
+        new Thread(task).start();
+    }
+
+    @FXML
+    public void saleClickListener() {
+        salesTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Sale>() {
+            @Override
+            public void changed(ObservableValue<? extends Sale> observable, Sale oldValue, Sale newValue) {
+                if (newValue != null) {
+                    final Sale sale = (Sale) salesTable.getSelectionModel().getSelectedItem();
+
+                }
+            }
+        });
+    }
 //    @FXML
 //    public void checkIfAnySaleRecords(Employee emp) {
 //        List<Sale> salesList = Datasource.getInstance().querySalesByEmployeeId(emp.getId());
@@ -74,13 +105,14 @@ public class Controller {
 //        salesList.clear();
 //    }
 
-        @FXML
+    @SuppressWarnings("Duplicates")
+    @FXML
     public void addEmployeeButton() {
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.initOwner(mainBorderPane.getScene().getWindow());
         dialog.setTitle("Add Employee");
         FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("AddEmployeeDialog.fxml"));
+        fxmlLoader.setLocation(getClass().getResource("addEmployeeDialog.fxml"));
         try {
             dialog.getDialogPane().setContent(fxmlLoader.load());
 
@@ -95,44 +127,88 @@ public class Controller {
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
             AddEmployeeDialog controller = fxmlLoader.getController();
-            employeeTable.getItems().add(controller.addEmployee());
+            final Employee emp = (Employee) controller.addEmployee();
+            if (emp != null) {
+                employeeTable.getItems().add(emp);
+            } else {
+                System.out.println("Couldn't insert Employee in database.");
+            }
         }
     }
+
     @FXML
     public void deleteEmployeeButton() {
         // prompt are you sure you want to delete employee - deleting will delete their sales bla bla
-        // check if emp null, no employee selected prompt. select an employee you would like to delete
         final Employee emp = (Employee) employeeTable.getSelectionModel().getSelectedItem();
-        try {
-            if (Datasource.getInstance().deleteEmployee(emp.getId())) {
-                employeeTable.getItems().remove(emp);
+        if (emp != null) {
+            try {
+                if (Datasource.getInstance().deleteEmployee(emp.getId())) {
+                    employeeTable.getItems().remove(emp);
+                }
+            } catch (SQLException e) {
+                System.out.println("Failed to delete employee: " + e.getMessage());
             }
-        } catch (SQLException e) {
-            System.out.println("Failed to delete employee" + e.getMessage());
+        } else {
+            // Prompt to select an employee.
+            System.out.println("Select an employee first!");
         }
     }
 
+    @SuppressWarnings("Duplicates")
     @FXML
     public void addSaleButton() {
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.initOwner(mainBorderPane.getScene().getWindow());
+        dialog.setTitle("Add Sale to Employee");
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("addSaleDialog.fxml"));
+        try {
+            dialog.getDialogPane().setContent(fxmlLoader.load());
 
+        } catch (IOException e) {
+            System.out.println("Couldn't load dialog");
+            e.printStackTrace();
+            return;
+        }
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
+        Optional<ButtonType> result = dialog.showAndWait();
+
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            AddSaleDialog controller = fxmlLoader.getController();
+            final Employee emp = employeeTable.getSelectionModel().getSelectedItem();
+            if (emp != null) {
+                final Sale sale = controller.addSale(emp);
+                if (sale != null) {
+                    salesTable.getItems().add(sale);
+                } else {
+                    // prompt dialog to inform user that sale couldn't be inserted. try again.
+                    System.out.println("Sale was null");
+                }
+            } else {
+                // prompt dialog to select an employee first
+                System.out.println("Employee was null");
+            }
+        }
     }
 
     @FXML
     public void deleteSaleButton() {
+        Sale sale = (Sale) salesTable.getSelectionModel().getSelectedItem();
+        System.out.println("ID of sale in deleteSaleButton method: " + sale.getId());
 
-    }
-
-    @FXML
-    public void listSalesForEmployees(Employee emp) {
-        Task<ObservableList<Sale>> task = new Task<ObservableList<Sale>>() {
-            @Override
-            protected ObservableList<Sale> call() throws Exception {
-                return FXCollections.observableArrayList(
-                        Datasource.getInstance().querySalesByEmployeeId(emp.getId()));
+        if (sale != null) {
+            try {
+                if (Datasource.getInstance().deleteSaleById(sale.getId())) {
+                    salesTable.getItems().remove(sale);
+                }
+            } catch (SQLException e) {
+                System.out.println("Failed to delete sale: " + e.getMessage());
             }
-        };
-        salesTable.itemsProperty().bind(task.valueProperty());
-        new Thread(task).start();
+        } else {
+            // Prompt for sale selection!
+            System.out.println("Select a sale first!");
+        }
     }
 
 //    @FXML
