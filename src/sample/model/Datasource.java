@@ -1,8 +1,5 @@
 package sample.model;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,17 +53,23 @@ public class Datasource {
     public static final String DELETE_EMPLOYEES = "DELETE FROM " + TABLE_EMPLOYEES +
             " WHERE " + COLUMN_EMP_ID + " = ?";
 
-//    public static final String DELETE_SALES_BY_EMP_ID =
+    public static final String DELETE_SALES_BY_EMP_ID = "DELETE FROM " + TABLE_SALES +
+            " WHERE " + COLUMN_EMP_ID + " = ?";
+
     public static final String DELETE_SALES_BY_ID = "DELETE FROM " + TABLE_SALES +
             " WHERE " + COLUMN_SALES_ID + " = ?";
 
+    public static final String HIGHEST_SALES_ID = "SELECT MAX(" + COLUMN_SALES_ID + ") FROM " + TABLE_SALES;
+
 
     private Connection conn;
-    private PreparedStatement querySalesByEmployeeId;
+    private PreparedStatement querySalesByEmpId;
     private PreparedStatement insertIntoEmployees;
     private PreparedStatement insertIntoSales;
     private PreparedStatement queryEmployees;
     private PreparedStatement deleteEmployees;
+    private PreparedStatement deleteSalesByEmpId;
+    private PreparedStatement deleteSalesById;
 
     private static Datasource instance = new Datasource();
 
@@ -81,11 +84,13 @@ public class Datasource {
     public boolean open() {
         try {
             conn = DriverManager.getConnection(CONNECTION_STRING);
-            querySalesByEmployeeId = conn.prepareStatement(QUERY_SALES_BY_EMPLOYEE_ID);
+            querySalesByEmpId = conn.prepareStatement(QUERY_SALES_BY_EMPLOYEE_ID);
             insertIntoEmployees = conn.prepareStatement(INSERT_EMPLOYEES);
             queryEmployees = conn.prepareStatement(QUERY_EMPLOYEES);
             insertIntoSales = conn.prepareStatement(INSERT_SALES);
             deleteEmployees = conn.prepareStatement(DELETE_EMPLOYEES);
+            deleteSalesById = conn.prepareStatement(DELETE_SALES_BY_ID);
+            deleteSalesByEmpId = conn.prepareStatement(DELETE_SALES_BY_EMP_ID);
 
             return true;
         } catch (SQLException e) {
@@ -97,11 +102,17 @@ public class Datasource {
     @SuppressWarnings("Duplicates")
     public void close() {
         try {
+            if (deleteSalesById != null) {
+                deleteSalesById.close();
+            }
+            if (deleteSalesByEmpId != null) {
+                deleteSalesByEmpId.close();
+            }
             if (deleteEmployees != null) {
                 deleteEmployees.close();
             }
-            if (querySalesByEmployeeId != null) {
-                querySalesByEmployeeId.close();
+            if (querySalesByEmpId != null) {
+                querySalesByEmpId.close();
             }
             if (insertIntoEmployees != null) {
                 insertIntoEmployees.close();
@@ -142,7 +153,7 @@ public class Datasource {
             while (results.next()) {
                 try {
                     Thread.sleep(20);
-                } catch(InterruptedException e) {
+                } catch (InterruptedException e) {
                     System.out.println("Interuppted: " + e.getMessage());
                 }
                 Employee emp = new Employee();
@@ -161,14 +172,14 @@ public class Datasource {
 
     public List<Sale> querySalesByEmployeeId(int id) {
         try {
-            querySalesByEmployeeId.setInt(1, id);
-            ResultSet results = querySalesByEmployeeId.executeQuery();
+            querySalesByEmpId.setInt(1, id);
+            ResultSet results = querySalesByEmpId.executeQuery();
 
             List<Sale> sales = new ArrayList<>();
-            while(results.next()) {
+            while (results.next()) {
 
                 Sale sale = new Sale();
-                sale.setId(INDEX_SALES_ID);
+                sale.setId(results.getInt(INDEX_SALES_ID));
                 sale.setDescription(results.getString(INDEX_SALES_DESCRIPTION));
                 sale.setDetails(results.getString(INDEX_SALES_DETAILS));
                 sale.setEmpId(id);
@@ -182,43 +193,47 @@ public class Datasource {
         }
     }
 
-    public void insertEmployee(int id, String name) throws SQLException {
+    public boolean insertEmployee(Employee emp) throws SQLException {
 
-        queryEmployees.setInt(1, id);
+        queryEmployees.setInt(1, emp.getId());
         ResultSet results = queryEmployees.executeQuery();
 
         if (!results.next()) {
-            insertIntoEmployees.setInt(1, id);
-            insertIntoEmployees.setString(2, name);
+            insertIntoEmployees.setInt(1, emp.getId());
+            insertIntoEmployees.setString(2, emp.getName());
 
             int affectedRows = insertIntoEmployees.executeUpdate();
 
-            if (affectedRows !=1) {
+            if (affectedRows != 1) {
                 throw new SQLException("Couldn't insert employee!");
             }
+            return true;
         } else {
             // pop up dialog saying employee exists already.
             System.out.println("Employee exists already");
+            return false;
         }
     }
 
-    public void insertSale(int empId, String description, String details, String date) throws SQLException {
-        queryEmployees.setInt(1, empId);
+    public boolean insertSale(Sale sale) throws SQLException {
+        queryEmployees.setInt(1, sale.getEmpId());
         ResultSet results = queryEmployees.executeQuery();
 
         if (results.next()) {
-            insertIntoSales.setString(1, description);
-            insertIntoSales.setString(2, details);
-            insertIntoSales.setInt(3, empId);
-            insertIntoSales.setString(4, date);
+            insertIntoSales.setString(1, sale.getDescription());
+            insertIntoSales.setString(2, sale.getDetails());
+            insertIntoSales.setInt(3, sale.getEmpId());
+            insertIntoSales.setString(4, sale.getDate());
 
             int affectedRows = insertIntoSales.executeUpdate();
 
-            if (affectedRows !=1) {
+            if (affectedRows != 1) {
                 throw new SQLException("Couldn't insert sale!");
             }
+            return true;
         } else {
             System.out.println("That employee doesn't exist");
+            return false;
         }
     }
 
@@ -226,30 +241,41 @@ public class Datasource {
 
         deleteEmployees.setInt(1, id);
         int affectedRows = deleteEmployees.executeUpdate();
+        System.out.println(affectedRows);
 
         if (affectedRows != 1) {
-            throw new SQLException("Delete Employee failed!");
+            throw new SQLException("Affected rows value was different than 1");
         } else {
             return true;
         }
     }
 
-    public void deleteSales() {
-        // TO DO
+    public boolean deleteSaleById(int id) throws SQLException {
+
+        deleteSalesById.setInt(1, id);
+        System.out.println("ID of current sale: " + id);
+        int affectedRows = deleteSalesById.executeUpdate();
+        if (affectedRows != 1) {
+            throw new SQLException("Affected rows value from query was different than 1");
+        } else {
+            return true;
+        }
+    }
+
+    public int highestSalesId() {
+        try {
+            Statement statement = conn.createStatement();
+            ResultSet results = statement.executeQuery(HIGHEST_SALES_ID);
+            if (results.next()) {
+                int highestId = results.getInt(1);
+                return highestId + 1;
+            } else {
+                // If no sale ID's in database, give a starting value at 1.
+                return 1;
+            }
+        } catch (SQLException e) {
+            System.out.println("Error, couldn't get the highest ID from database");
+            return 0;
+        }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
