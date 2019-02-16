@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.GridPane?>
+
+<DialogPane prefHeight="100.0" prefWidth="260.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.AddEmployeeDialog">
+
+    <headerText>
+         Fill in both fields to add a new Employee.
+    </headerText>
+    <content>
+        <GridPane>
+            <Label text="ID: " GridPane.columnIndex="0" GridPane.rowIndex="0">
+                <GridPane.margin>
+                    <Insets top="20.0" left="20.0" />
+                </GridPane.margin>
+            </Label>
+            <TextField fx:id="empId" prefWidth="100" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                <GridPane.margin>
+                    <Insets top="20.0" />
+                </GridPane.margin>
+            </TextField>
+            <Label text="Name: " GridPane.columnIndex="0" GridPane.rowIndex="3">
+                <GridPane.margin>
+                    <Insets top="20.0" />
+                </GridPane.margin>
+            </Label>
+
+            <TextField fx:id="empName" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                <GridPane.margin>
+                    <Insets top="20.0" />
+                </GridPane.margin>
+            </TextField>
+
+
+        </GridPane>
+    </content>
+</DialogPane>
