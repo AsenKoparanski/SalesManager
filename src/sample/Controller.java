@@ -97,16 +97,13 @@ public class Controller {
             public void changed(ObservableValue<? extends Sale> observable, Sale oldValue, Sale newValue) {
                 if (newValue != null) {
                     final Sale sale = (Sale) salesTable.getSelectionModel().getSelectedItem();
-                    setLabels(sale);
+                    saleDescription.setText(sale.getDescription());
+                    saleDetails.setText(sale.getDetails());
                 }
             }
         });
     }
 
-    public void setLabels(Sale sale) {
-        saleDescription.setText(sale.getDescription());
-        saleDetails.setText(sale.getDetails());
-    }
 //    @FXML
 //    public void checkIfAnySaleRecords(Employee emp) {
 //        List<Sale> salesList = Datasource.getInstance().querySalesByEmployeeId(emp.getId());
