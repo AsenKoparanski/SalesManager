@@ -40,10 +40,16 @@ public class Controller {
     private TableView<Employee> employeeTable;
 
     @FXML
-    private Label salesNameLabel;
+    private TextField empNameTextField;
 
     @FXML
-    private TextField empNameTextField;
+    private TextField empID;
+
+    @FXML
+    private TextField saleDescription;
+
+    @FXML
+    private TextArea saleDetails;
 
     @FXML
     public void getAllEmployees() {
@@ -65,7 +71,7 @@ public class Controller {
                     final Employee emp = (Employee) employeeTable.getSelectionModel().getSelectedItem();
                     listSalesForEmployees(emp);
                     empNameTextField.setText(emp.getName());
-//                    checkIfAnySaleRecords(emp);
+                    empID.setText(String.valueOf(emp.getId()));
                 }
             }
         });
@@ -91,10 +97,15 @@ public class Controller {
             public void changed(ObservableValue<? extends Sale> observable, Sale oldValue, Sale newValue) {
                 if (newValue != null) {
                     final Sale sale = (Sale) salesTable.getSelectionModel().getSelectedItem();
-
+                    setLabels(sale);
                 }
             }
         });
+    }
+
+    public void setLabels(Sale sale) {
+        saleDescription.setText(sale.getDescription());
+        saleDetails.setText(sale.getDetails());
     }
 //    @FXML
 //    public void checkIfAnySaleRecords(Employee emp) {
@@ -195,7 +206,6 @@ public class Controller {
     @FXML
     public void deleteSaleButton() {
         Sale sale = (Sale) salesTable.getSelectionModel().getSelectedItem();
-        System.out.println("ID of sale in deleteSaleButton method: " + sale.getId());
 
         if (sale != null) {
             try {
