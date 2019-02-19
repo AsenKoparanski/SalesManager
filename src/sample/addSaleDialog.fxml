@@ -12,10 +12,6 @@
     </headerText>
     <content>
         <GridPane vgap="5" hgap="5">
-
-            <Label text="Employee ID: " GridPane.rowIndex="0"/>
-            <Label text="Employee name: " GridPane.rowIndex="1"/>
-
             <Label text="Description: " GridPane.rowIndex="2" />
             <TextField fx:id="descriptionField" maxWidth="300" GridPane.rowIndex="3" />
             <Label text="Details: " GridPane.rowIndex="4" />
