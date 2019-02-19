@@ -241,7 +241,6 @@ public class Datasource {
 
         deleteEmployees.setInt(1, id);
         int affectedRows = deleteEmployees.executeUpdate();
-        System.out.println(affectedRows);
 
         if (affectedRows != 1) {
             throw new SQLException("Affected rows value was different than 1");
@@ -253,7 +252,6 @@ public class Datasource {
     public boolean deleteSaleById(int id) throws SQLException {
 
         deleteSalesById.setInt(1, id);
-        System.out.println("ID of current sale: " + id);
         int affectedRows = deleteSalesById.executeUpdate();
         if (affectedRows != 1) {
             throw new SQLException("Affected rows value from query was different than 1");
