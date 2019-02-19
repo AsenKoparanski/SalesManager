@@ -217,13 +217,6 @@ public class Controller {
             System.out.println("Select a sale first!");
         }
     }
-
-//    @FXML
-//    public void handleClickListView() {
-//        TodoItem item = todoListView.getSelectionModel().getSelectedItem();
-//        itemDetailsTextArea.setText(item.getDetails());
-//        deadlineLabel.setText(item.getDeadline().toString());
-//    }
 }
 
 // Helper class to run a background thread for a potentially longer task.
