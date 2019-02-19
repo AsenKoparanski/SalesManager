@@ -37,7 +37,7 @@
     </top>
 
     <left>
-        <VBox >
+        <VBox maxWidth="220">
             <children>
                 <HBox>
                     <Label text="  Employee Table: "/>
@@ -70,7 +70,7 @@
         </VBox>
     </left>
     <center>
-        <VBox >
+        <VBox maxWidth="200">
             <children>
                 <HBox>
                     <Label text="  Sales Table: "/>
@@ -107,15 +107,19 @@
     <right>
         <VBox>
             <HBox>
-                <Label text=" Employee Information" VBox.vgrow="ALWAYS"/>
+                <Label text=" Employee Information" style="-fx-font-weight: bold" minWidth="150" VBox.vgrow="ALWAYS"/>
             </HBox>
+            <Label text=" Employee ID"/>
+            <TextField fx:id="empID" VBox.vgrow="ALWAYS" maxWidth="70"/>
             <Label text=" Employee Name"/>
             <TextField fx:id="empNameTextField" maxWidth="140"/>
-            <TextArea fx:id="itemDetailsTextArea" VBox.vgrow="ALWAYS" />
             <HBox>
-                <Label text=" Sales Information" VBox.vgrow="ALWAYS"/>
+                <Label text=" Sales Information" style="-fx-font-weight: bold" VBox.vgrow="ALWAYS"/>
             </HBox>
-            <TextArea fx:id="itemDetailsTextArea1" VBox.vgrow="ALWAYS" />
+            <Label text=" Sale Description"/>
+            <TextField fx:id="saleDescription"  VBox.vgrow="ALWAYS" maxWidth="240"/>
+            <Label text=" Sale Details"/>
+            <TextArea fx:id="saleDetails" maxWidth="260" VBox.vgrow="ALWAYS" wrapText="true"/>
             <HBox prefHeight="45">
                 <children>
                     <ProgressBar fx:id="progressBar" prefWidth="300.0" progress="0.0" visible="false">
