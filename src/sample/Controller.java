@@ -72,9 +72,14 @@ public class Controller {
                     listSalesForEmployees(emp);
                     empNameTextField.setText(emp.getName());
                     empID.setText(String.valueOf(emp.getId()));
+                    clearSales();
                 }
             }
         });
+    }
+    public void clearSales() {
+        saleDescription.setText("");
+        saleDetails.setText("");
     }
 
     @FXML
