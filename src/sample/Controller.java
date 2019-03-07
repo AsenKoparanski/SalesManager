@@ -141,11 +141,20 @@ public class Controller {
         if (result.isPresent() && result.get() == ButtonType.OK) {
             AddEmployeeDialog controller = fxmlLoader.getController();
             final Employee emp = (Employee) controller.addEmployee();
-            if (emp != null) {
-                employeeTable.getItems().add(emp);
-            } else {
-                System.out.println("Couldn't insert Employee in database.");
-            }
+
+            Task<ObservableList<Sale>> task = new Task<ObservableList<Sale>>() {
+                @Override
+                protected ObservableList<Sale> call() throws Exception {
+                    return FXCollections.observableArrayList(
+                            Datasource.getInstance().querySalesByEmployeeId(emp.getId()));
+                }
+            };
+            new Thread(task).start();
+//            if (emp != null) {
+            task.setOnSucceeded(e -> employeeTable.getItems().add(emp));
+//            } else {
+//                System.out.println("Couldn't insert Employee in database.");
+//            }
         }
     }
 
