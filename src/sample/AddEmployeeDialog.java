@@ -20,24 +20,17 @@ public class AddEmployeeDialog {
         String idToInt = empId.getText().trim();
         int employeeId = Integer.parseInt(idToInt);
         String employeeName = empName.getText().trim();
+
         if (employeeId > 0 && employeeName != null) {
             Employee emp = new Employee();
             emp.setId(employeeId);
             emp.setName(employeeName);
             // check if null
             // check if existing ID, send appropriate prompt message
-            try {
-                if (Datasource.getInstance().insertEmployee(emp)) {
-                    return emp;
-                } else {
-                    return null;
-                }
-            } catch (SQLException e) {
-                System.out.println("Failed to insert employee in database: " + e.getMessage());
-                return null;
-            }
+        return emp;
         }
         return null;
+
     }
 }
 
