@@ -150,7 +150,6 @@ public class Controller {
                     return Datasource.getInstance().insertEmployee(emp);
                 }
             };
-            new Thread(task).start();
             task.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
                 @Override
                 public void handle(WorkerStateEvent t) {
@@ -162,6 +161,7 @@ public class Controller {
 
                 }
             });
+            new Thread(task).start();
         }
     }
 
@@ -186,38 +186,57 @@ public class Controller {
     @SuppressWarnings("Duplicates")
     @FXML
     public void addSaleButton() {
-        Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.initOwner(mainBorderPane.getScene().getWindow());
-        dialog.setTitle("Add Sale to Employee");
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("addSaleDialog.fxml"));
-        try {
-            dialog.getDialogPane().setContent(fxmlLoader.load());
+        final Employee emp = employeeTable.getSelectionModel().getSelectedItem();
 
-        } catch (IOException e) {
-            System.out.println("Couldn't load dialog");
-            e.printStackTrace();
-            return;
-        }
-        dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
-        dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
-        Optional<ButtonType> result = dialog.showAndWait();
+        if (emp != null) {
+            Dialog<ButtonType> dialog = new Dialog<>();
+            dialog.initOwner(mainBorderPane.getScene().getWindow());
+            dialog.setTitle("Add Sale to Employee");
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("addSaleDialog.fxml"));
+            try {
+                dialog.getDialogPane().setContent(fxmlLoader.load());
 
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            AddSaleDialog controller = fxmlLoader.getController();
-            final Employee emp = employeeTable.getSelectionModel().getSelectedItem();
-            if (emp != null) {
+            } catch (IOException e) {
+                System.out.println("Couldn't load dialog");
+                e.printStackTrace();
+                return;
+            }
+            dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+            dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
+            Optional<ButtonType> result = dialog.showAndWait();
+
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                AddSaleDialog controller = fxmlLoader.getController();
+
                 final Sale sale = controller.addSale(emp);
                 if (sale != null) {
-                    salesTable.getItems().add(sale);
+                    Task<Boolean> task = new Task<Boolean>() {
+                        @Override
+                        protected Boolean call() throws Exception {
+                            return Datasource.getInstance().insertSale(sale);
+
+                        }
+                    };
+                    task.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+                        @Override
+                        public void handle(WorkerStateEvent t) {
+                            if (task.getValue()) {
+                                salesTable.getItems().add(sale);
+                            } else {
+                                System.out.println("Sale couldn't be added");
+                            }
+
+                        }
+                    });
+                    new Thread(task).start();
                 } else {
-                    // prompt dialog to inform user that sale couldn't be inserted. try again.
-                    System.out.println("Sale was null");
+                    // prompt dialog to select an employee first
+                    System.out.println("Sale was empty, please fill out all fields");
                 }
-            } else {
-                // prompt dialog to select an employee first
-                System.out.println("Employee was null");
             }
+        } else  {
+            System.out.println("Employee not selected!");
         }
     }
 
