@@ -27,22 +27,24 @@ public class AddSaleDialog {
         String description = descriptionField.getText().trim();
         String details = detailsArea.getText().trim();
         String saleDate = saleDatePicker.getValue().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        if (description != null && details != null && saleDate != null) {
+            Sale sale = new Sale();
+            sale.setDescription(description);
+            sale.setDetails(details);
+            sale.setDate(saleDate);
+            sale.setEmpId(emp.getId());
 
-        Sale sale = new Sale();
-        sale.setDescription(description);
-        sale.setDetails(details);
-        sale.setDate(saleDate);
-        sale.setEmpId(emp.getId());
-
+            return sale;
+        }
+        return null;
         // check if null
         // check if existing ID, send appropriate prompt message
-        try {
-            sale.setId(Datasource.getInstance().highestSalesId());
-            Datasource.getInstance().insertSale(sale);
-        } catch (SQLException e) {
-            System.out.println("Failed to insert sale in database: " + e.getMessage());
-            return null;
-        }
-        return sale;
+//            sale.setId(Datasource.getInstance().highestSalesId());
+//            Datasource.getInstance().insertSale(sale);
+//        } catch (SQLException e) {
+//            System.out.println("Failed to insert sale in database: " + e.getMessage());
+//            return null;
+//        }
+//        return null;
     }
 }
