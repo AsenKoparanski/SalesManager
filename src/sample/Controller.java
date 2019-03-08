@@ -5,6 +5,8 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 
 import javafx.fxml.FXMLLoader;
@@ -149,11 +151,17 @@ public class Controller {
                 }
             };
             new Thread(task).start();
-//            if (emp != null) {
-            task.setOnSucceeded(e -> employeeTable.getItems().add(emp));
-//            } else {
-//                System.out.println("Couldn't insert Employee in database.");
-//            }
+            task.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+                @Override
+                public void handle(WorkerStateEvent t) {
+                    if (task.getValue()) {
+                        employeeTable.getItems().add(emp);
+                    } else {
+                        System.out.println("Employee couldn't be added");
+                    }
+
+                }
+            });
         }
     }
 
