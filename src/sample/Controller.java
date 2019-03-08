@@ -142,11 +142,10 @@ public class Controller {
             AddEmployeeDialog controller = fxmlLoader.getController();
             final Employee emp = (Employee) controller.addEmployee();
 
-            Task<ObservableList<Sale>> task = new Task<ObservableList<Sale>>() {
+            Task<Boolean> task = new Task<Boolean>() {
                 @Override
-                protected ObservableList<Sale> call() throws Exception {
-                    return FXCollections.observableArrayList(
-                            Datasource.getInstance().querySalesByEmployeeId(emp.getId()));
+                protected Boolean call() throws Exception {
+                    return Datasource.getInstance().insertEmployee(emp);
                 }
             };
             new Thread(task).start();
