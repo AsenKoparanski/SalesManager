@@ -27,6 +27,7 @@ public class AddSaleDialog {
         String description = descriptionField.getText().trim();
         String details = detailsArea.getText().trim();
         String saleDate = saleDatePicker.getValue().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+
         if (description != null && details != null && saleDate != null) {
             Sale sale = new Sale();
             sale.setDescription(description);
