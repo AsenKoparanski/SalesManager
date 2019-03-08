@@ -214,6 +214,7 @@ public class Controller {
                     Task<Boolean> task = new Task<Boolean>() {
                         @Override
                         protected Boolean call() throws Exception {
+                            sale.setId(Datasource.getInstance().highestSalesId());
                             return Datasource.getInstance().insertSale(sale);
 
                         }
