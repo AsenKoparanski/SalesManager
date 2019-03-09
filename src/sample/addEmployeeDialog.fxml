@@ -6,7 +6,10 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.GridPane?>
 
-<DialogPane prefHeight="100.0" prefWidth="260.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.AddEmployeeDialog">
+<DialogPane prefHeight="100.0" prefWidth="260.0"
+            xmlns="http://javafx.com/javafx/8.0.172-ea"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="sample.AddEmployeeDialog">
 
     <headerText>
          Fill in both fields to add a new Employee.
