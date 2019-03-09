@@ -237,7 +237,12 @@ public class Controller {
                 }
             }
         } else  {
-            System.out.println("Employee not selected!");
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Please select an employee first!", ButtonType.OK);
+            alert.setTitle("Unable to add sale.");
+            alert.setHeaderText(null);
+            alert.setGraphic(null);
+            alert.showAndWait();
+
         }
     }
 
@@ -269,3 +274,4 @@ class GetAllEmployeesTask extends Task {
 
     }
 }
+
