@@ -40,12 +40,6 @@ public class AddSaleDialog {
         return null;
         // check if null
         // check if existing ID, send appropriate prompt message
-//            sale.setId(Datasource.getInstance().highestSalesId());
-//            Datasource.getInstance().insertSale(sale);
-//        } catch (SQLException e) {
-//            System.out.println("Failed to insert sale in database: " + e.getMessage());
-//            return null;
-//        }
-//        return null;
+
     }
 }
