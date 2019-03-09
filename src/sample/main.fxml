@@ -76,7 +76,7 @@
                     <Label text="  Sales Table: "/>
                 </HBox>                <TableView fx:id="salesTable" maxWidth="230" minWidth="230" VBox.vgrow="ALWAYS">
                     <placeholder>
-                        <Label text="No Employee selected or no sales to show"/>
+                        <Label text="No Employee selected."/>
                     </placeholder>
                     <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
