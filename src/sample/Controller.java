@@ -19,6 +19,7 @@ import sample.model.Sale;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -71,6 +72,7 @@ public class Controller {
             public void changed(ObservableValue<? extends Employee> observable, Employee oldValue, Employee newValue) {
                 if(newValue != null) {
                     final Employee emp = (Employee) employeeTable.getSelectionModel().getSelectedItem();
+                    checkIfAnySaleRecords();
                     listSalesForEmployees(emp);
                     empNameTextField.setText(emp.getName());
                     empID.setText(String.valueOf(emp.getId()));
@@ -111,14 +113,13 @@ public class Controller {
         });
     }
 
-//    @FXML
-//    public void checkIfAnySaleRecords(Employee emp) {
-//        List<Sale> salesList = Datasource.getInstance().querySalesByEmployeeId(emp.getId());
-//        if (salesList.isEmpty()) {
-//            salesTable.setPlaceholder(new Label("Employee has no sale records."));
-//        }
-//        salesList.clear();
-//    }
+    @FXML
+    public void checkIfAnySaleRecords() {
+        List<Sale> salesList = salesTable.getItems();
+        if (salesList.isEmpty()) {
+            salesTable.setPlaceholder(new Label("Employee has no sale records."));
+        }
+    }
 
     @SuppressWarnings("Duplicates")
     @FXML
