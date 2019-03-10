@@ -24,12 +24,17 @@ public class AddSaleDialog {
 
     @FXML
     public Sale addSale(Employee emp) {
-        saleDatePicker.setDisable(true);
-//                .getEditor().setEditable(false);
+//        saleDatePicker.setDisable(true);
+////                .getEditor().setEditable(false);
 
         String description = descriptionField.getText().trim();
         String details = detailsArea.getText().trim();
         String saleDate = saleDatePicker.getValue().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+
+//        if (user_name.getText() == null || user_name.getText().trim().isEmpty()) {
+//            // your code here
+//        }
+//        https://stackoverflow.com/questions/32866937/how-to-check-if-textfield-is-empty
 
         if (description != "" && details != "" && saleDate != "") {
             Sale sale = new Sale();
