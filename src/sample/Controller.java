@@ -233,7 +233,6 @@ public class Controller {
                     });
                     new Thread(task).start();
                 } else {
-                    // prompt dialog to select an employee first
                     System.out.println("Sale was empty, please fill out all fields");
                 }
             }
