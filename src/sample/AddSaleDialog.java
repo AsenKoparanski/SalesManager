@@ -22,13 +22,16 @@ public class AddSaleDialog {
     @FXML
     private DatePicker saleDatePicker;
 
+    @FXML
     public Sale addSale(Employee emp) {
+        saleDatePicker.setDisable(true);
+//                .getEditor().setEditable(false);
 
         String description = descriptionField.getText().trim();
         String details = detailsArea.getText().trim();
         String saleDate = saleDatePicker.getValue().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
 
-        if (description != null && details != null && saleDate != null) {
+        if (description != "" && details != "" && saleDate != "") {
             Sale sale = new Sale();
             sale.setDescription(description);
             sale.setDetails(details);
